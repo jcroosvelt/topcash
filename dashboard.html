@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopCash – Payez • Transférez • Avancez</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1A3FAA;
+    --blue-dark: #0f2778;
+    --blue-light: #2855d4;
+    --gold: #F7A800;
+    --gold-light: #FFD452;
+    --gold-dark: #d18e00;
+    --bg: #F0F4FF;
+    --surface: #ffffff;
+    --surface2: #EEF2FF;
+    --text: #0f1b3d;
+    --text-muted: #6B7A9E;
+    --border: #dde4f5;
+    --success: #00C48C;
+    --danger: #FF4D6A;
+    --radius: 20px;
+    --shadow: 0 8px 32px rgba(26,63,170,0.10);
+    --shadow-lg: 0 20px 60px rgba(26,63,170,0.18);
+  }
+
+  html, body {
+    height: 100%; font-family: 'Poppins', sans-serif;
+    background: var(--bg); color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── LAYOUT ── */
+  .app-shell {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    background: var(--bg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page { display: none; flex: 1; overflow-y: auto; padding-bottom: 90px; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--blue);
+    padding: 52px 24px 28px;
+    border-radius: 0 0 32px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content:'';
+    position:absolute; top:-60px; right:-40px;
+    width:220px; height:220px;
+    border-radius:50%;
+    background: rgba(247,168,0,.12);
+  }
+  .header::after {
+    content:'';
+    position:absolute; bottom:-80px; left:-20px;
+    width:180px; height:180px;
+    border-radius:50%;
+    background: rgba(255,255,255,.05);
+  }
+  .header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; position:relative;z-index:2; }
+  .header-greeting { color:rgba(255,255,255,.7); font-size:13px; }
+  .header-name { color:#fff; font-weight:700; font-size:17px; font-family:'Nunito',sans-serif; }
+  .notif-btn {
+    width:40px; height:40px; border-radius:50%;
+    background:rgba(255,255,255,.15);
+    border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .notif-dot {
+    position:absolute; top:8px; right:9px;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--gold); border:2px solid var(--blue);
+  }
+
+  /* BALANCE */
+  .balance-section { text-align:center; position:relative; z-index:2; margin-bottom:8px; }
+  .balance-label { color:rgba(255,255,255,.65); font-size:12px; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
+  .balance-amount {
+    font-family:'Nunito',sans-serif;
+    font-size:44px; font-weight:900;
+    color:#fff; line-height:1;
+    display:flex; align-items:flex-start; justify-content:center; gap:4px;
+  }
+  .balance-currency { font-size:22px; margin-top:6px; color:var(--gold); font-weight:800; }
+  .balance-toggle { background:none; border:none; cursor:pointer; margin-left:8px; opacity:.6; color:#fff; }
+
+  /* QUICK ACTIONS */
+  .quick-actions {
+    display:flex; gap:12px; margin:20px 20px 0;
+    position:relative; z-index:10;
+  }
+  .qa-btn {
+    flex:1; border:none; border-radius:16px; cursor:pointer;
+    padding:14px 8px; display:flex; flex-direction:column;
+    align-items:center; gap:6px; font-family:'Poppins',sans-serif;
+    font-weight:600; font-size:12px; transition:.2s;
+  }
+  .qa-btn:active { transform:scale(.96); }
+  .qa-btn.primary { background:var(--gold); color:#0f1b3d; box-shadow:0 4px 20px rgba(247,168,0,.4); }
+  .qa-btn.secondary { background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.2); }
+  .qa-btn.secondary:hover { background:rgba(255,255,255,.22); }
+  .qa-icon { width:32px; height:32px; object-fit:contain; display:block; }
+
+  /* ── MAIN CONTENT ── */
+  .content { padding: 20px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family:'Nunito',sans-serif;
+    font-weight:800; font-size:16px;
+    color:var(--text); margin-bottom:14px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .see-all { font-size:12px; color:var(--blue); font-weight:600; cursor:pointer; }
+
+  /* 3D CARD */
+  .card-3d-wrapper {
+    perspective: 1000px;
+    margin-bottom:24px;
+    cursor:pointer;
+  }
+  .card-3d {
+    width:100%; aspect-ratio:1.586;
+    border-radius:20px;
+    transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.23,1,.32,1);
+    position:relative;
+  }
+  .card-3d-wrapper:hover .card-3d { transform: rotateY(180deg); }
+  .card-face {
+    position:absolute; inset:0; border-radius:20px;
+    backface-visibility:hidden;
+    padding:24px;
+    overflow:hidden;
+  }
+  .card-front {
+    background: linear-gradient(135deg, #1A3FAA 0%, #0b2280 40%, #0f1b3d 100%);
+    box-shadow: 0 25px 60px rgba(26,63,170,.45), 0 8px 20px rgba(0,0,0,.2);
+  }
+  .card-back {
+    background: linear-gradient(135deg, #0b2280 0%, #1A3FAA 100%);
+    transform: rotateY(180deg);
+  }
+
+  /* Card shine effect */
+  .card-front::before {
+    content:'';
+    position:absolute; inset:0; border-radius:20px;
+    background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 50%);
+    pointer-events:none;
+  }
+  .card-chip {
+    width:44px; height:34px;
+    background: linear-gradient(135deg, #FFD452, #F7A800, #d18e00);
+    border-radius:8px; margin-bottom:20px;
+    position:relative; overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+  .card-chip::after {
+    content:'';
+    position:absolute; top:50%; left:0; right:0;
+    height:1px; background:rgba(0,0,0,.2);
+  }
+  .card-chip::before {
+    content:'';
+    position:absolute; left:50%; top:0; bottom:0;
+    width:1px; background:rgba(0,0,0,.2);
+  }
+  .card-number {
+    font-family:'Nunito',sans-serif;
+    font-size:17px; font-weight:800; letter-spacing:3px;
+    color:rgba(255,255,255,.9); margin-bottom:16px;
+    text-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .card-bottom { display:flex; justify-content:space-between; align-items:flex-end; }
+  .card-holder { color:rgba(255,255,255,.8); font-size:12px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
+  .card-name { color:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:14px; }
+  .card-exp-label { color:rgba(255,255,255,.6); font-size:9px; text-transform:uppercase; letter-spacing:1px; }
+  .card-exp { color:#fff; font-weight:700; font-size:13px; }
+  .card-logo-area { position:absolute; top:6px; right:10px; }
+  .card-logo-img { height:128px; object-fit:contain; opacity:0.88; }
+  .card-network { display:flex; gap:-6px; }
+  .circle { width:32px; height:32px; border-radius:50%; opacity:.85; }
+  .circle1 { background:#EB001B; }
+  .circle2 { background:#F79E1B; margin-left:-12px; }
+
+  /* CARD BACK */
+  .card-back-strip {
+    position:absolute; top:40px; left:0; right:0;
+    height:44px; background:#000;
+  }
+  .card-back-cvv-area { margin-top:100px; }
+  .card-back-sig {
+    background:repeating-linear-gradient(45deg,#f5f5f5,#f5f5f5 2px,#e0e0e0 2px,#e0e0e0 4px);
+    height:38px; border-radius:4px; margin-bottom:8px;
+    display:flex; align-items:center; justify-content:flex-end;
+    padding-right:12px;
+  }
+  .cvv { font-size:18px; font-weight:800; color:#0f1b3d; font-style:italic; }
+  .card-back-hint { text-align:center; color:rgba(255,255,255,.5); font-size:11px; }
+
+  /* Gold accent line on card */
+  .card-accent {
+    position:absolute; bottom:0; left:0; right:0;
+    height:4px;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light),var(--gold));
+    border-radius:0 0 20px 20px;
+  }
+
+  /* CREATE CARD BANNER */
+  .create-card-btn {
+    width:100%;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border:none; border-radius:16px; padding:16px 20px;
+    display:flex; align-items:center; gap:14px;
+    cursor:pointer; margin-bottom:24px;
+    box-shadow:0 6px 24px rgba(247,168,0,.35);
+    transition:.2s;
+  }
+  .create-card-btn:active { transform:scale(.98); }
+  .create-icon { font-size:28px; }
+  .create-text { text-align:left; }
+  .create-title { font-weight:700; font-size:14px; color:#0f1b3d; }
+  .create-sub { font-size:11px; color:rgba(15,27,61,.65); }
+  .create-arrow { margin-left:auto; color:#0f1b3d; font-size:18px; opacity:.5; }
+
+  /* TRANSACTIONS */
+  .tx-list { display:flex; flex-direction:column; gap:4px; }
+  .tx-item {
+    background:var(--surface); border-radius:14px; padding:14px 16px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow:0 2px 8px rgba(26,63,170,.05);
+    transition:.15s;
+  }
+  .tx-item:active { transform:scale(.99); }
+  .tx-icon {
+    width:44px; height:44px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0;
+  }
+  .tx-info { flex:1; }
+  .tx-name { font-weight:600; font-size:14px; }
+  .tx-date { font-size:11px; color:var(--text-muted); }
+  .tx-amount { font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; }
+  .tx-amount.credit { color:var(--success); }
+  .tx-amount.debit { color:var(--danger); }
+
+  /* STATS CARD */
+  .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .stat-card {
+    background:var(--surface); border-radius:16px; padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .stat-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.6px; }
+  .stat-val { font-family:'Nunito',sans-serif; font-weight:800; font-size:20px; }
+  .stat-val.green { color:var(--success); }
+  .stat-val.red { color:var(--danger); }
+  .stat-change { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:430px;
+    background:var(--surface);
+    border-top:1px solid var(--border);
+    display:flex; height:72px;
+    padding:0 8px 8px;
+    box-shadow:0 -8px 32px rgba(26,63,170,.08);
+    z-index:100;
+  }
+  .nav-item {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:3px; border:none; background:none; cursor:pointer;
+    padding:8px 4px; border-radius:12px;
+    transition:.15s; color:var(--text-muted);
+    font-family:'Poppins',sans-serif;
+  }
+  .nav-item.active { color:var(--blue); }
+  .nav-icon { font-size:22px; line-height:1; }
+  .nav-label { font-size:10px; font-weight:600; }
+  .nav-item.active .nav-label { color:var(--blue); }
+
+  /* ── PAGE: CARDS ── */
+  .cards-header { background:var(--blue); padding:52px 24px 32px; border-radius:0 0 32px 32px; margin-bottom:20px; }
+  .cards-header h2 { color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:22px; }
+  .cards-header p { color:rgba(255,255,255,.65); font-size:13px; }
+
+  .my-cards-list { padding:0 20px; display:flex; flex-direction:column; gap:16px; }
+  .mini-card {
+    border-radius:16px; padding:18px;
+    background:linear-gradient(135deg,#1A3FAA,#0b2280);
+    color:#fff; position:relative; overflow:hidden;
+    box-shadow:0 8px 28px rgba(26,63,170,.3);
+  }
+  .mini-card::before { content:''; position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06); }
+  .mini-card-num { font-family:'Nunito',sans-serif;font-size:15px;letter-spacing:2.5px;font-weight:700;margin-bottom:12px;opacity:.9; }
+  .mini-card-row { display:flex;justify-content:space-between;align-items:flex-end; }
+  .mini-card-name { font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px; }
+  .mini-card-bal { font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:var(--gold); }
+  .card-status { position:absolute;top:14px;right:16px;background:rgba(0,196,140,.2);border:1px solid rgba(0,196,140,.4);padding:3px 10px;border-radius:20px;font-size:10px;color:#00C48C;font-weight:600; }
+
+  .add-card-btn {
+    margin:16px 20px;
+    border:2px dashed var(--border); background:none; border-radius:16px;
+    padding:20px; width:calc(100% - 40px); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    color:var(--blue); font-weight:600; font-size:14px;
+    transition:.2s; font-family:'Poppins',sans-serif;
+  }
+  .add-card-btn:hover { background:var(--surface2); }
+
+  /* ── PAGE: TRANSACTIONS ── */
+  .tx-header { background:var(--blue); padding:52px 24px 28px; border-radius:0 0 32px 32px; margin-bottom:20px; }
+  .tx-header h2 { color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:22px; }
+
+  .filter-tabs { display:flex; gap:8px; padding:0 20px; margin-bottom:16px; overflow-x:auto; }
+  .filter-tab {
+    border:none; border-radius:20px; padding:7px 16px;
+    font-size:12px; font-weight:600; cursor:pointer;
+    white-space:nowrap; font-family:'Poppins',sans-serif;
+    transition:.15s;
+  }
+  .filter-tab.active { background:var(--blue); color:#fff; }
+  .filter-tab:not(.active) { background:var(--surface); color:var(--text-muted); }
+
+  .tx-section-label { padding:0 20px; font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.8px; margin:16px 0 8px; }
+  .tx-list-full { padding:0 20px; display:flex; flex-direction:column; gap:4px; }
+
+  /* ── PAGE: SETTINGS ── */
+  .settings-header {
+    background:var(--blue); padding:52px 24px 28px;
+    border-radius:0 0 32px 32px; margin-bottom:20px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .avatar {
+    width:60px; height:60px; border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; font-weight:900; color:#0f1b3d;
+    font-family:'Nunito',sans-serif;
+    box-shadow:0 4px 16px rgba(247,168,0,.4);
+  }
+  .settings-name { color:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:18px; }
+  .settings-email { color:rgba(255,255,255,.6); font-size:12px; }
+  .settings-content { padding:0 20px; }
+  .settings-group { background:var(--surface); border-radius:16px; margin-bottom:16px; overflow:hidden; box-shadow:var(--shadow); }
+  .settings-item {
+    display:flex; align-items:center; gap:14px;
+    padding:16px; border-bottom:1px solid var(--border);
+    cursor:pointer; transition:.15s;
+  }
+  .settings-item:last-child { border-bottom:none; }
+  .settings-item:active { background:var(--surface2); }
+  .settings-item-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .settings-item-text { flex:1; }
+  .settings-item-label { font-weight:600; font-size:14px; }
+  .settings-item-sub { font-size:11px; color:var(--text-muted); }
+  .settings-chevron { color:var(--text-muted); font-size:16px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(15,23,61,.5);
+    backdrop-filter:blur(6px); z-index:200;
+    display:none; align-items:flex-end; justify-content:center;
+  }
+  .modal-overlay.open { display:flex; animation:fadeIn .2s ease; }
+  .modal {
+    background:var(--surface); border-radius:28px 28px 0 0;
+    padding:28px 24px 40px; width:100%; max-width:430px;
+    animation:slideUp .3s cubic-bezier(.23,1,.32,1);
+  }
+  @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+  .modal-handle { width:44px; height:4px; border-radius:2px; background:var(--border); margin:0 auto 20px; }
+  .modal-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:20px; margin-bottom:6px; }
+  .modal-sub { color:var(--text-muted); font-size:13px; margin-bottom:24px; }
+  .modal-input-group { margin-bottom:16px; }
+  .modal-label { font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:6px; display:block; }
+  .modal-input {
+    width:100%; border:2px solid var(--border); border-radius:12px;
+    padding:13px 16px; font-size:15px; font-family:'Poppins',sans-serif;
+    outline:none; transition:.2s; background:var(--bg);
+  }
+  .modal-input:focus { border-color:var(--blue); background:#fff; }
+  .modal-btn {
+    width:100%; border:none; border-radius:14px; padding:16px;
+    font-size:15px; font-weight:700; cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:#0f1b3d;
+    box-shadow:0 6px 20px rgba(247,168,0,.35);
+    transition:.2s; margin-top:8px;
+  }
+  .modal-btn:active { transform:scale(.98); }
+  .modal-close { position:absolute; top:20px; right:20px; background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-muted); }
+  .modal { position:relative; }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:#0f1b3d; color:#fff; border-radius:12px; padding:12px 20px;
+    font-size:13px; font-weight:600; white-space:nowrap; z-index:300;
+    opacity:0; transition:.3s; pointer-events:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.2);
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* LOGO in card */
+  .card-logo-text { font-family:'Nunito',sans-serif; font-weight:900; color:#fff; font-size:18px; }
+  .card-logo-text span { color:var(--gold); }
+
+  /* Recharge options */
+  .recharge-option {
+    display:flex; align-items:center; gap:12px;
+    border:2px solid var(--border); border-radius:12px; padding:12px 14px;
+    cursor:pointer; transition:.2s;
+  }
+  .recharge-option.recharge-selected {
+    border-color:var(--blue); background:var(--surface2);
+  }
+  .recharge-check { color:var(--blue); font-weight:800; font-size:16px; }
+
+  /* Dark mode */
+  body.dark {
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --text: #e6edf3; --text-muted: #8b949e; --border: #30363d;
+    --shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+
+  /* Scroll style */
+  ::-webkit-scrollbar { width:0; height:0; }
+
+  @media (min-width:431px) {
+    .app-shell { box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 24px 80px rgba(0,0,0,.12); }
+    .bottom-nav { border-radius:0; }
+  }
+
+  /* ══════════════════════════════════════
+     DESKTOP LAYOUT — ≥ 900px
+  ══════════════════════════════════════ */
+  @media (min-width: 900px) {
+    html, body { height: 100%; overflow: hidden; }
+    body { background: linear-gradient(135deg, #0b1a5c 0%, #1A3FAA 55%, #0f2778 100%); }
+
+    /* Cacher l'app-shell mobile sur desktop */
+    body > .app-shell { display: none !important; }
+
+    /* Wrapper deux colonnes */
+    .dt-wrapper {
+      display: flex;
+      height: 100vh;
+      max-width: 1340px;
+      margin: 0 auto;
+      align-items: center;
+      gap: 60px;
+      padding: 40px 64px;
+    }
+
+    /* ── Sidebar gauche ── */
+    .dt-sidebar {
+      flex-shrink: 0;
+      width: 240px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-self: stretch;
+      padding: 32px 0;
+    }
+    .dt-logo {
+      height: 90px;
+      object-fit: contain;
+      margin-bottom: 28px;
+      filter: brightness(0) invert(1);
+    }
+    .dt-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+    }
+    .dt-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; color: #0f1b3d;
+      flex-shrink: 0;
+    }
+    .dt-user-name { font-weight: 700; font-size: 13px; color: #fff; }
+    .dt-user-sub  { font-size: 11px; color: rgba(255,255,255,.5); }
+
+    .dt-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      border-radius: 14px;
+      color: rgba(255,255,255,.6);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+      border: none;
+      background: none;
+      font-family: 'Poppins', sans-serif;
+      width: 100%;
+      text-align: left;
+    }
+    .dt-nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .dt-nav-item.active { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+    .dt-nav-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+
+    .dt-sidebar-bottom {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    .dt-version { font-size: 11px; color: rgba(255,255,255,.3); padding: 8px 16px; }
+
+    /* ── Zone centrale ── */
+    .dt-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .dt-center::-webkit-scrollbar { width: 0; }
+
+    /* Top bar */
+    .dt-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 16px 22px;
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+    }
+    .dt-page-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: #fff; }
+    .dt-topbar-actions { display: flex; gap: 10px; }
+    .dt-topbar-btn {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 12px;
+      padding: 9px 18px;
+      color: #fff; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'Poppins', sans-serif;
+      transition: .2s;
+    }
+    .dt-topbar-btn:hover { background: rgba(255,255,255,.2); }
+    .dt-topbar-btn.gold { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #0f1b3d; border-color: transparent; }
+
+    /* Balance card */
+    .dt-balance-card {
+      background: linear-gradient(135deg, #1A3FAA 0%, #0b2280 50%, #0f1b3d 100%);
+      border-radius: 24px;
+      padding: 32px 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      flex-shrink: 0;
+    }
+    .dt-balance-card::before {
+      content: '';
+      position: absolute; top: -60px; right: -40px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: rgba(247,168,0,.1);
+    }
+    .dt-balance-card::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -20px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,.04);
+    }
+    .dt-balance-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; position: relative; z-index: 2; }
+    .dt-balance-greeting { color: rgba(255,255,255,.6); font-size: 13px; margin-bottom: 2px; }
+    .dt-balance-name { color: #fff; font-weight: 700; font-size: 18px; font-family: 'Nunito', sans-serif; }
+    .dt-balance-label { color: rgba(255,255,255,.55); font-size: 12px; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 2; }
+    .dt-balance-amount {
+      font-family: 'Nunito', sans-serif; font-size: 52px; font-weight: 900;
+      color: #fff; line-height: 1;
+      display: flex; align-items: flex-start; gap: 6px;
+      position: relative; z-index: 2;
+    }
+    .dt-balance-currency { font-size: 26px; margin-top: 8px; color: var(--gold); font-weight: 800; }
+    .dt-balance-actions { display: flex; gap: 12px; margin-top: 28px; position: relative; z-index: 2; }
+    .dt-bal-btn {
+      flex: 1; border: none; border-radius: 14px; padding: 14px 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      font-family: 'Poppins', sans-serif; transition: .2s;
+    }
+    .dt-bal-btn.gold { background: var(--gold); color: #0f1b3d; box-shadow: 0 4px 20px rgba(247,168,0,.4); }
+    .dt-bal-btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+    .dt-bal-btn:hover { transform: translateY(-1px); }
+
+    /* Stats row */
+    .dt-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex-shrink: 0; }
+    .dt-stat-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 20px 22px;
+      backdrop-filter: blur(8px);
+    }
+    .dt-stat-label { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+    .dt-stat-val { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: #fff; }
+    .dt-stat-val.green { color: var(--success); }
+    .dt-stat-val.red   { color: var(--danger); }
+
+    /* Transactions */
+    .dt-section-title {
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
+      color: rgba(255,255,255,.8); margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .dt-see-all { font-size: 12px; color: var(--gold); cursor: pointer; font-weight: 600; }
+
+    .dt-tx-list {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .dt-tx-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: background .2s; cursor: pointer;
+    }
+    .dt-tx-item:last-child { border-bottom: none; }
+    .dt-tx-item:hover { background: rgba(255,255,255,.05); }
+    .dt-tx-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .dt-tx-name { font-weight: 600; font-size: 14px; color: #fff; }
+    .dt-tx-date { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .dt-tx-amount { margin-left: auto; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; }
+    .dt-tx-amount.debit { color: var(--danger); }
+    .dt-tx-amount.credit { color: var(--success); }
+
+    /* ── Colonne droite : téléphone ── */
+    .dt-phone-col {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dt-phone-frame {
+      width: 310px;
+      height: 640px;
+      background: #0a0a0f;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.07),
+        0 40px 100px rgba(0,0,0,.7),
+        0 8px 30px rgba(0,0,0,.4),
+        inset 0 0 0 2px rgba(255,255,255,.04);
+      position: relative;
+    }
+    .dt-phone-notch {
+      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 28px; background: #0a0a0f;
+      border-radius: 0 0 18px 18px; z-index: 20;
+    }
+    .dt-phone-btn-r  { position: absolute; right: -3px; top: 110px; width: 3px; height: 50px; background: #1e1e1e; border-radius: 2px; }
+    .dt-phone-btn-l1 { position: absolute; left: -3px; top: 80px;  width: 3px; height: 28px; background: #1e1e1e; border-radius: 2px; }
+    .dt-phone-btn-l2 { position: absolute; left: -3px; top: 118px; width: 3px; height: 50px; background: #1e1e1e; border-radius: 2px; }
+    .dt-phone-screen {
+      width: 100%; height: 100%; border-radius: 40px;
+      overflow: hidden; background: var(--bg);
+    }
+    .dt-phone-screen iframe { width: 100%; height: 100%; border: none; display: block; }
+    .dt-phone-glow {
+      position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+      width: 200px; height: 40px;
+      background: rgba(26,63,170,.55); filter: blur(30px);
+      border-radius: 50%; pointer-events: none;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .dt-wrapper { display: none !important; }
+  }
+
+  @media (min-width: 900px) {
+    .bottom-nav { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════ LAYOUT DESKTOP (≥ 900px) ══════ -->
+<div class="dt-wrapper">
+
+  <!-- Sidebar -->
+  <div class="dt-sidebar">
+    <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+         alt="TopCash" class="dt-logo">
+
+    <div class="dt-user">
+      <div class="dt-avatar">JC</div>
+      <div>
+        <div class="dt-user-name">Jean Charles R.</div>
+        <div class="dt-user-sub">Compte vérifié ✅</div>
+      </div>
+    </div>
+
+    <button class="dt-nav-item active" onclick="dtGoTo('home',this)">
+      <span class="dt-nav-icon">🏠</span> Accueil
+    </button>
+    <button class="dt-nav-item" onclick="dtGoTo('cards',this)">
+      <span class="dt-nav-icon">💳</span> Mes cartes
+    </button>
+    <button class="dt-nav-item" onclick="dtGoTo('transactions',this)">
+      <span class="dt-nav-icon">📋</span> Transactions
+    </button>
+    <button class="dt-nav-item" onclick="dtGoTo('services',this)">
+      <span class="dt-nav-icon">⚡</span> Services
+    </button>
+    <button class="dt-nav-item" onclick="dtGoTo('settings',this)">
+      <span class="dt-nav-icon">⚙️</span> Paramètres
+    </button>
+
+    <div class="dt-sidebar-bottom">
+      <div class="dt-version">TopCash v1.0 • Haïti 🇭🇹</div>
+    </div>
+  </div>
+
+  <!-- Zone centrale -->
+  <div class="dt-center" id="dt-center-content">
+
+    <!-- Top bar -->
+    <div class="dt-topbar">
+      <div class="dt-page-title" id="dt-page-title">Tableau de bord</div>
+      <div class="dt-topbar-actions">
+        <button class="dt-topbar-btn" onclick="showToast('🔔 Aucune nouvelle notification')">🔔 Notifications</button>
+        <button class="dt-topbar-btn gold" onclick="showToast('↗️ Transfert initié…')">↗️ Envoyer</button>
+      </div>
+    </div>
+
+    <!-- Balance -->
+    <div class="dt-balance-card">
+      <div class="dt-balance-top">
+        <div>
+          <div class="dt-balance-greeting">Bonjour 👋</div>
+          <div class="dt-balance-name">Jean Charles Roosvelt</div>
+        </div>
+        <button onclick="toggleBalance()" style="background:rgba(255,255,255,.15);border:none;border-radius:10px;padding:8px 14px;color:#fff;cursor:pointer;font-size:13px;">👁 Masquer</button>
+      </div>
+      <div class="dt-balance-label">Solde disponible</div>
+      <div class="dt-balance-amount">
+        <span class="dt-balance-currency">HTG</span>
+        <span id="dt-balance-val">24,850</span>
+      </div>
+      <div class="dt-balance-actions">
+        <button class="dt-bal-btn gold" onclick="showToast('💳 Recharge en cours…')">💳 Recharger</button>
+        <button class="dt-bal-btn ghost" onclick="showToast('↗️ Transfert initié…')">↗️ Envoyer</button>
+        <button class="dt-bal-btn ghost" onclick="showToast('↙️ Retrait initié…')">↙️ Retirer</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dt-stats">
+      <div class="dt-stat-card">
+        <div class="dt-stat-label">Dépenses ce mois</div>
+        <div class="dt-stat-val red">−8,420 HTG</div>
+      </div>
+      <div class="dt-stat-card">
+        <div class="dt-stat-label">Reçu ce mois</div>
+        <div class="dt-stat-val green">+15,000 HTG</div>
+      </div>
+      <div class="dt-stat-card">
+        <div class="dt-stat-label">Transactions</div>
+        <div class="dt-stat-val">12</div>
+      </div>
+    </div>
+
+    <!-- Transactions -->
+    <div>
+      <div class="dt-section-title">
+        Transactions récentes
+        <span class="dt-see-all">Voir tout →</span>
+      </div>
+      <div class="dt-tx-list">
+        <div class="dt-tx-item">
+          <div class="dt-tx-icon" style="background:rgba(255,243,224,.15)">🛒</div>
+          <div>
+            <div class="dt-tx-name">Achat en ligne</div>
+            <div class="dt-tx-date">Aujourd'hui • 14:32</div>
+          </div>
+          <div class="dt-tx-amount debit">−1,200 HTG</div>
+        </div>
+        <div class="dt-tx-item">
+          <div class="dt-tx-icon" style="background:rgba(232,245,233,.12)">💸</div>
+          <div>
+            <div class="dt-tx-name">Dépôt reçu</div>
+            <div class="dt-tx-date">Hier • 09:15</div>
+          </div>
+          <div class="dt-tx-amount credit">+5,000 HTG</div>
+        </div>
+        <div class="dt-tx-item">
+          <div class="dt-tx-icon" style="background:rgba(227,242,253,.12)">📱</div>
+          <div>
+            <div class="dt-tx-name">Rechargement MonCash</div>
+            <div class="dt-tx-date">12 mai • 11:00</div>
+          </div>
+          <div class="dt-tx-amount credit">+10,000 HTG</div>
+        </div>
+        <div class="dt-tx-item">
+          <div class="dt-tx-icon" style="background:rgba(252,228,236,.12)">🏪</div>
+          <div>
+            <div class="dt-tx-name">Paiement boutique</div>
+            <div class="dt-tx-date">10 mai • 16:45</div>
+          </div>
+          <div class="dt-tx-amount debit">−3,500 HTG</div>
+        </div>
+        <div class="dt-tx-item">
+          <div class="dt-tx-icon" style="background:rgba(237,231,246,.12)">↗️</div>
+          <div>
+            <div class="dt-tx-name">Transfert envoyé</div>
+            <div class="dt-tx-date">08 mai • 10:20</div>
+          </div>
+          <div class="dt-tx-amount debit">−3,720 HTG</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Colonne téléphone -->
+  <div class="dt-phone-col">
+    <div style="position:relative;">
+      <div class="dt-phone-frame">
+        <div class="dt-phone-notch"></div>
+        <div class="dt-phone-btn-r"></div>
+        <div class="dt-phone-btn-l1"></div>
+        <div class="dt-phone-btn-l2"></div>
+        <div class="dt-phone-screen" id="dt-phone-screen"></div>
+      </div>
+      <div class="dt-phone-glow"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ══════ FIN LAYOUT DESKTOP ══════ -->
+
+<div class="app-shell">
+
+  <!-- ═══════════════ PAGE: ACCUEIL ═══════════════ -->
+  <div class="page active" id="page-home">
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="header-greeting">Bonjour 👋</div>
+          <div class="header-name">Jean Charles Roosvelt</div>
+        </div>
+        <button class="notif-btn" onclick="showToast('🔔 Aucune nouvelle notification')">
+          🔔
+          <span class="notif-dot"></span>
+        </button>
+      </div>
+
+      <div class="balance-section">
+        <div class="balance-label">Votre Balance</div>
+        <div class="balance-amount">
+          <span class="balance-currency">HTG</span>
+          <span id="balance-val">24,850</span>
+          <button class="balance-toggle" onclick="toggleBalance()">👁</button>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <button class="qa-btn primary" onclick="openModal('recharge')">
+          <img class="qa-icon" src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/2f0266fc-9c17-4342-90c5-1e4fa3a86587.png" alt="Retirer">
+          Retirer
+        </button>
+        <button class="qa-btn secondary" onclick="openModal('depot')">
+          <img class="qa-icon" src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/b17e251a-2e6b-48c7-8523-8a75c955ed30.png" alt="Recharger">
+          Recharger
+        </button>
+        <button class="qa-btn secondary" onclick="openModal('send')">
+          <img class="qa-icon" src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/f087bd0b-8d34-4d6c-b870-a9a9afa7d893.png" alt="Envoyer">
+          Envoyer
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Dépenses ce mois</div>
+          <div class="stat-val red">8,420 <small style="font-size:12px">HTG</small></div>
+          <div class="stat-change">↑ +12% vs mois dernier</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenus ce mois</div>
+          <div class="stat-val green">15,000 <small style="font-size:12px">HTG</small></div>
+          <div class="stat-change">↑ +5% vs mois dernier</div>
+        </div>
+      </div>
+
+      <!-- CARTE 3D -->
+      <div class="section-title">Ma carte virtuelle <span class="see-all" onclick="goTo('cards')">Voir tout</span></div>
+
+      <div class="card-3d-wrapper" title="Retourner la carte">
+        <div class="card-3d" id="mainCard">
+          <!-- FACE AVANT -->
+          <div class="card-face card-front">
+            <div class="card-logo-area">
+              <img class="card-logo-img" src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png" alt="TopCash">
+            </div>
+            <div style="position:absolute;bottom:52px;left:24px;right:24px">
+              <div class="card-chip" style="margin-bottom:12px"></div>
+              <div class="card-number">4512  ••••  ••••  7834</div>
+            </div>
+            <div class="card-bottom" style="position:absolute;bottom:14px;left:24px;right:24px">
+              <div>
+                <div class="card-holder">Titulaire</div>
+                <div class="card-name">JC. ROOSVELT</div>
+              </div>
+              <div style="text-align:right">
+                <div class="card-exp-label">Expire</div>
+                <div class="card-exp">09/28</div>
+              </div>
+              <div class="card-network">
+                <div class="circle circle1"></div>
+                <div class="circle circle2"></div>
+              </div>
+            </div>
+            <div class="card-accent"></div>
+          </div>
+          <!-- FACE ARRIÈRE -->
+          <div class="card-face card-back">
+            <div class="card-back-strip"></div>
+            <div class="card-back-cvv-area">
+              <div class="card-back-sig">
+                <span class="cvv">742</span>
+              </div>
+              <div class="card-back-hint">CVV / Code de sécurité</div>
+            </div>
+            <div style="position:absolute;bottom:20px;left:24px;right:24px;text-align:center;color:rgba(255,255,255,.4);font-size:10px;">
+              Cette carte virtuelle est protégée et sécurisée par TopCash
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRÉER CARTE -->
+      <button class="create-card-btn" onclick="openModal('create-card')">
+        <span class="create-icon">💳</span>
+        <div class="create-text">
+          <div class="create-title">Créer une nouvelle carte</div>
+          <div class="create-sub">Carte virtuelle prépayée • Instantané</div>
+        </div>
+        <span class="create-arrow">›</span>
+      </button>
+
+      <!-- TRANSACTIONS RÉCENTES -->
+      <div class="section-title">Transactions récentes <span class="see-all" onclick="goTo('transactions')">Voir tout</span></div>
+      <div class="tx-list">
+        <div class="tx-item">
+          <div class="tx-icon" style="background:#FFF3E0">🛒</div>
+          <div class="tx-info">
+            <div class="tx-name">Achat en ligne</div>
+            <div class="tx-date">Aujourd'hui • 14:32</div>
+          </div>
+          <div class="tx-amount debit">-1,200 HTG</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon" style="background:#E8F5E9">💸</div>
+          <div class="tx-info">
+            <div class="tx-name">Dépôt reçu</div>
+            <div class="tx-date">Hier • 09:15</div>
+          </div>
+          <div class="tx-amount credit">+5,000 HTG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PAGE: MES CARTES ═══════════════ -->
+  <div class="page" id="page-cards">
+    <div class="cards-header">
+      <h2>💳 Mes Cartes</h2>
+      <p>Gérez vos cartes virtuelles prépayées</p>
+    </div>
+
+    <div class="my-cards-list">
+      <div>
+        <div class="mini-card">
+          <span class="card-status">● Actif</span>
+          <div class="mini-card-num">4512 •••• •••• 7834</div>
+          <div class="mini-card-row">
+            <div>
+              <div class="mini-card-name">JC. Roosvelt</div>
+              <div style="color:rgba(255,255,255,.5);font-size:11px">Expire 09/28</div>
+            </div>
+            <div style="text-align:right">
+              <div style="color:rgba(255,255,255,.5);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Solde</div>
+              <div class="mini-card-bal">USD 97</div>
+            </div>
+          </div>
+        </div>
+        <button onclick="openModal('card-recharge')" style="width:100%;margin-top:10px;background:var(--gold);border:none;border-radius:12px;padding:12px;font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;color:#0f1b3d;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(247,168,0,.3)">
+          ⬆️ Recharger ma carte
+        </button>
+      </div>
+
+      <div>
+        <div class="mini-card" style="background:linear-gradient(135deg,#0a1a4a,#1A3FAA)">
+          <span class="card-status" style="background:rgba(255,77,106,.15);border-color:rgba(255,77,106,.3);color:#FF4D6A">● Bloqué</span>
+          <div class="mini-card-num">6011 •••• •••• 2291</div>
+          <div class="mini-card-row">
+            <div>
+              <div class="mini-card-name">JC. Roosvelt</div>
+              <div style="color:rgba(255,255,255,.5);font-size:11px">Expire 03/27</div>
+            </div>
+            <div style="text-align:right">
+              <div style="color:rgba(255,255,255,.5);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Solde</div>
+              <div class="mini-card-bal">USD 25</div>
+            </div>
+          </div>
+        </div>
+        <button onclick="showToast('Débloquez la carte pour la recharger 🔒')" style="width:100%;margin-top:10px;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:12px;font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          🔒 Recharger ma carte
+        </button>
+      </div>
+    </div>
+
+    <button class="add-card-btn" onclick="openModal('create-card')">
+      ＋ Créer une nouvelle carte virtuelle
+    </button>
+
+    <div style="padding:0 20px">
+      <div class="section-title">Avantages TopCash</div>
+      <div style="background:var(--surface);border-radius:16px;padding:20px;box-shadow:var(--shadow)">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:20px">🌍</span>
+            <div><div style="font-weight:600;font-size:13px">Acceptée partout</div><div style="font-size:11px;color:var(--text-muted)">Visa & Mastercard international</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PAGE: AUTRES SERVICES ═══════════════ -->
+  <div class="page" id="page-services">
+    <div style="background:var(--blue);padding:52px 24px 32px;border-radius:0 0 32px 32px;margin-bottom:20px">
+      <h2 style="color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:22px">🌐 Autres Services</h2>
+      <p style="color:rgba(255,255,255,.65);font-size:13px">Tous vos services en un seul endroit</p>
+    </div>
+    <div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Paiement de factures — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#FFF3E0;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">⚡</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Paiement de factures</div>
+          <div style="font-size:11px;color:var(--text-muted)">EDH, CAMEP, internet…</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Netflix — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎬</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Netflix</div>
+          <div style="font-size:11px;color:var(--text-muted)">Abonnement & renouvellement</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Prime Video — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#00A8E0;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📺</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Prime Video</div>
+          <div style="font-size:11px;color:var(--text-muted)">Abonnement Amazon Prime</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Recharge téléphonique — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#E8F5E9;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📱</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Recharge téléphonique</div>
+          <div style="font-size:11px;color:var(--text-muted)">Digicel • Natcom</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Achat eSIM — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#E3F2FD;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🌐</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Achat eSIM</div>
+          <div style="font-size:11px;color:var(--text-muted)">Connectez-vous partout dans le monde</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Transfert international — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#E8EAF6;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🌍</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Transfert international</div>
+          <div style="font-size:11px;color:var(--text-muted)">Envoyer à l'étranger</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Épargne — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#F3E5F5;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🏦</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Épargne & Investissement</div>
+          <div style="font-size:11px;color:var(--text-muted)">Faites fructifier votre argent</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer" onclick="showToast('Assurance — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#FFF8E1;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🛡️</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Assurance</div>
+          <div style="font-size:11px;color:var(--text-muted)">Protégez ce qui compte</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+      <div style="background:var(--surface);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer;margin-bottom:8px" onclick="showToast('Cashback — bientôt disponible')">
+        <div style="width:48px;height:48px;border-radius:14px;background:#FFF3E0;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎁</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">Cashback & Récompenses</div>
+          <div style="font-size:11px;color:var(--text-muted)">Gagnez à chaque transaction</div>
+        </div>
+        <span style="color:var(--text-muted)">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PAGE: TRANSACTIONS ═══════════════ -->
+  <div class="page" id="page-transactions">
+    <div class="tx-header">
+      <h2>📊 Transactions</h2>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter(this)">Tout</button>
+      <button class="filter-tab" onclick="setFilter(this)">Dépenses</button>
+      <button class="filter-tab" onclick="setFilter(this)">Revenus</button>
+      <button class="filter-tab" onclick="setFilter(this)">Transferts</button>
+    </div>
+
+    <div class="tx-section-label">Aujourd'hui</div>
+    <div class="tx-list-full">
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#FFF3E0">🛒</div>
+        <div class="tx-info">
+          <div class="tx-name">Achat en ligne</div>
+          <div class="tx-date">14:32 • Carte •••• 7834</div>
+        </div>
+        <div class="tx-amount debit">-1,200 HTG</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#E3F2FD">☕</div>
+        <div class="tx-info">
+          <div class="tx-name">Café Ritz</div>
+          <div class="tx-date">08:15 • Carte •••• 7834</div>
+        </div>
+        <div class="tx-amount debit">-250 HTG</div>
+      </div>
+    </div>
+
+    <div class="tx-section-label">Hier – 16 mai</div>
+    <div class="tx-list-full">
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#E8F5E9">💸</div>
+        <div class="tx-info">
+          <div class="tx-name">Dépôt reçu</div>
+          <div class="tx-date">09:15 • Virement entrant</div>
+        </div>
+        <div class="tx-amount credit">+5,000 HTG</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#F3E5F5">📱</div>
+        <div class="tx-info">
+          <div class="tx-name">Recharge mobile</div>
+          <div class="tx-date">17:45 • Digicel</div>
+        </div>
+        <div class="tx-amount debit">-500 HTG</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#E8EAF6">🍕</div>
+        <div class="tx-info">
+          <div class="tx-name">Resto Lakay</div>
+          <div class="tx-date">13:10 • Carte •••• 2291</div>
+        </div>
+        <div class="tx-amount debit">-1,800 HTG</div>
+      </div>
+    </div>
+
+    <div class="tx-section-label">15 mai</div>
+    <div class="tx-list-full" style="margin-bottom:20px">
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#E8F5E9">💰</div>
+        <div class="tx-info">
+          <div class="tx-name">Dépôt</div>
+          <div class="tx-date">11:00 • MonCash</div>
+        </div>
+        <div class="tx-amount credit">+10,000 HTG</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-icon" style="background:#FFEBEE">⚡</div>
+        <div class="tx-info">
+          <div class="tx-name">Facture EDH</div>
+          <div class="tx-date">09:30 • Paiement facture</div>
+        </div>
+        <div class="tx-amount debit">-2,470 HTG</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PAGE: PARAMÈTRES ═══════════════ -->
+  <div class="page" id="page-settings">
+    <div class="settings-header">
+      <div class="avatar">JR</div>
+      <div>
+        <div class="settings-name">Jean Charles Roosvelt</div>
+        <div class="settings-email">jc.roosvelt@topcash.ht</div>
+      </div>
+    </div>
+
+    <div class="settings-content">
+      <div class="settings-group">
+        <div class="settings-item" onclick="showToast('Informations personnelles — bientôt disponible')">
+          <div class="settings-item-icon" style="background:#EEF2FF">👤</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Informations personnelles</div>
+            <div class="settings-item-sub">Nom, téléphone, email</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="showToast('Vérification KYC — bientôt disponible')">
+          <div class="settings-item-icon" style="background:#E8F5E9">✅</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Vérification d'identité (KYC)</div>
+            <div class="settings-item-sub" style="color:var(--success)">Compte vérifié</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="showToast('Sécurité et confidentialité — bientôt disponible')">
+          <div class="settings-item-icon" style="background:#FFF3E0">🔒</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Sécurité et confidentialité</div>
+            <div class="settings-item-sub">PIN, biométrie, 2FA</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="showToast('Langue : Français ✓')">
+          <div class="settings-item-icon" style="background:#E8F5E9">🌍</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Langue</div>
+            <div class="settings-item-sub">Français (Haïti)</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="toggleTheme()">
+          <div class="settings-item-icon" style="background:#F3E5F5" id="theme-icon">🌙</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Apparence</div>
+            <div class="settings-item-sub" id="theme-sub">Mode clair</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="openContactModal()">
+          <div class="settings-item-icon" style="background:#E3F2FD">💬</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label">Nous contacter</div>
+            <div class="settings-item-sub">Envoyer un message à l'équipe</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+        <div class="settings-item" onclick="showToast('Demande de fermeture envoyée 📧')">
+          <div class="settings-item-icon" style="background:#FFEBEE">❌</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label" style="color:var(--danger)">Fermer votre compte</div>
+            <div class="settings-item-sub">Suppression définitive</div>
+          </div>
+          <span class="settings-chevron">›</span>
+        </div>
+      </div>
+
+      <div class="settings-group" style="margin-bottom:32px">
+        <div class="settings-item" onclick="showToast('À bientôt ! 👋')" style="color:var(--danger)">
+          <div class="settings-item-icon" style="background:#FFEBEE">🚪</div>
+          <div class="settings-item-text">
+            <div class="settings-item-label" style="color:var(--danger)">Déconnexion</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="goTo('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Accueil</span>
+    </button>
+    <button class="nav-item" id="nav-cards" onclick="goTo('cards')">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label">Cartes</span>
+    </button>
+    <button class="nav-item" id="nav-transactions" onclick="goTo('transactions')">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Transactions</span>
+    </button>
+    <button class="nav-item" id="nav-services" onclick="goTo('services')">
+      <span class="nav-icon">🌐</span>
+      <span class="nav-label">Services</span>
+    </button>
+    <button class="nav-item" id="nav-settings" onclick="goTo('settings')">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Paramètres</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- RETIRER -->
+<div class="modal-overlay" id="modal-recharge" onclick="closeModalOutside(event,'recharge')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('recharge')">×</button>
+    <div class="modal-title">💸 Retirer des fonds</div>
+    <div class="modal-sub">Choisissez le montant et la méthode de retrait</div>
+    <div class="modal-input-group">
+      <label class="modal-label">Montant (HTG) — Plafond 100 000 HTG</label>
+      <input class="modal-input" id="withdraw-amount" type="number" placeholder="Ex: 5,000" min="100" max="100000" oninput="checkWithdrawLimit(this)">
+      <div id="withdraw-limit-msg" style="font-size:11px;color:var(--danger);margin-top:4px;display:none">⚠️ Le plafond maximum est de 100 000 HTG (MonCash / NatCash)</div>
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Méthode de retrait</label>
+      <select class="modal-input" id="withdraw-method" style="appearance:none" onchange="checkWithdrawLimit(document.getElementById('withdraw-amount'))">
+        <option value="moncash">MonCash — Plafond 100 000 HTG</option>
+        <option value="natcash">NatCash — Plafond 100 000 HTG</option>
+        <option value="banque">Carte bancaire / Virement</option>
+      </select>
+    </div>
+    <button class="modal-btn" onclick="initiateWithdrawOTP()">Retirer maintenant</button>
+  </div>
+</div>
+
+<!-- OTP WHATSAPP RETRAIT -->
+<div class="modal-overlay" id="modal-withdraw-otp" onclick="closeModalOutside(event,'withdraw-otp')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('withdraw-otp')">×</button>
+    <div class="modal-title">📲 Confirmation WhatsApp</div>
+    <div class="modal-sub">Un code OTP a été envoyé sur votre WhatsApp (+509 3712-4582). Valable 5 minutes.</div>
+    <div style="background:var(--surface2);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px">
+      <div style="font-size:36px;margin-bottom:8px">💬</div>
+      <div style="font-size:12px;color:var(--text-muted)">Ouvrez WhatsApp et entrez le code reçu</div>
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Code OTP (6 chiffres)</label>
+      <input class="modal-input" id="otp-input" type="number" placeholder="Ex: 123456" maxlength="6" style="text-align:center;font-size:22px;letter-spacing:6px;font-weight:700">
+    </div>
+    <button class="modal-btn" onclick="confirmWithdrawOTP()">Confirmer le retrait</button>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);cursor:pointer" onclick="showToast('Nouveau code envoyé sur WhatsApp 📲')">Renvoyer le code</div>
+  </div>
+</div>
+
+<!-- RECHARGER -->
+<div class="modal-overlay" id="modal-depot" onclick="closeModalOutside(event,'depot')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('depot')">×</button>
+    <div class="modal-title">⬆️ Recharger mon compte</div>
+    <div class="modal-sub">Choisissez votre méthode de recharge</div>
+    <div class="modal-input-group">
+      <label class="modal-label">Montant (HTG)</label>
+      <input class="modal-input" type="number" placeholder="Ex: 5,000" min="100">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Méthode de recharge</label>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div onclick="selectRechargeMethod(this,'moncash')" class="recharge-option recharge-selected">
+          <span style="font-size:22px">📱</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">MonCash</div><div style="font-size:11px;color:var(--text-muted)">Rechargez via MonCash</div></div>
+          <span class="recharge-check">✓</span>
+        </div>
+        <div onclick="selectRechargeMethod(this,'natcash')" class="recharge-option">
+          <span style="font-size:22px">💳</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">NatCash</div><div style="font-size:11px;color:var(--text-muted)">Rechargez via NatCash</div></div>
+          <span class="recharge-check" style="opacity:0">✓</span>
+        </div>
+        <div onclick="selectRechargeMethod(this,'carte')" class="recharge-option">
+          <span style="font-size:22px">🏦</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">Carte de crédit / Bancaire</div><div style="font-size:11px;color:var(--text-muted)">Visa, Mastercard acceptées</div></div>
+          <span class="recharge-check" style="opacity:0">✓</span>
+        </div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="doAction('Recharge effectuée avec succès ✅','depot')">Recharger maintenant</button>
+  </div>
+</div>
+
+<!-- ENVOYER -->
+<div class="modal-overlay" id="modal-send" onclick="closeModalOutside(event,'send')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('send')">×</button>
+    <div class="modal-title">↗️ Envoyer de l'argent</div>
+    <div class="modal-sub">Transfert instantané vers un autre compte</div>
+    <div class="modal-input-group">
+      <label class="modal-label">Destinataire (numéro ou nom)</label>
+      <input class="modal-input" type="text" placeholder="Ex: +509 3712-0000">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Montant (HTG)</label>
+      <input class="modal-input" type="number" placeholder="Ex: 1,000">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Note (optionnel)</label>
+      <input class="modal-input" type="text" placeholder="Motif du transfert">
+    </div>
+    <button class="modal-btn" onclick="doAction('Transfert envoyé avec succès ✅','send')">Envoyer maintenant</button>
+  </div>
+</div>
+
+<!-- CRÉER CARTE — ÉTAPE 1 -->
+<div class="modal-overlay" id="modal-create-card" onclick="closeModalOutside(event,'create-card')">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('create-card')">×</button>
+    <div class="modal-title">💳 Créer une carte virtuelle</div>
+    <div class="modal-sub">Carte prépayée TopCash • Visa / Mastercard</div>
+
+    <div style="background:linear-gradient(135deg,#1A3FAA,#0b2280);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:6px">💳</div>
+      <div style="font-weight:800;font-size:15px;color:#fff">Carte Virtuelle TopCash</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">Acceptée partout dans le monde</div>
+    </div>
+
+    <div class="modal-input-group">
+      <label class="modal-label">Réseau de carte</label>
+      <div style="display:flex;gap:10px">
+        <div id="net-visa" onclick="selectNetwork(this,'visa')" style="flex:1;border:2px solid var(--blue);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:var(--surface2);transition:.2s">
+          <div style="font-size:26px">💳</div>
+          <div style="font-weight:700;font-size:13px;color:var(--text)">Visa</div>
+          <div style="width:16px;height:16px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center" id="check-visa"><span style="color:#fff;font-size:10px;font-weight:800">✓</span></div>
+        </div>
+        <div id="net-mc" onclick="selectNetwork(this,'mc')" style="flex:1;border:2px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:transparent;transition:.2s">
+          <div style="display:flex;margin-bottom:2px"><div style="width:26px;height:26px;border-radius:50%;background:#EB001B;opacity:.9"></div><div style="width:26px;height:26px;border-radius:50%;background:#F79E1B;opacity:.9;margin-left:-10px"></div></div>
+          <div style="font-weight:700;font-size:13px;color:var(--text)">Mastercard</div>
+          <div style="width:16px;height:16px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center" id="check-mc"><span style="color:transparent;font-size:10px;font-weight:800">✓</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Nom sur la carte</label>
+      <input class="modal-input" type="text" value="JC ROOSVELT" style="text-transform:uppercase">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Limite mensuelle</label>
+      <input class="modal-input" type="number" placeholder="Ex: 500">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Devise</label>
+      <div style="background:var(--surface2);border:2px solid var(--blue);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🇺🇸</span>
+        <span style="font-weight:700;font-size:15px">USD – Dollar américain</span>
+        <span style="margin-left:auto;color:var(--blue);font-weight:800">✓</span>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="goToKYC()">Créer ma carte →</button>
+  </div>
+</div>
+
+<!-- CRÉER CARTE — ÉTAPE 2 : KYC -->
+<div class="modal-overlay" id="modal-kyc" onclick="closeModalOutside(event,'kyc')">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('kyc')">×</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <span style="background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">Étape 2 / 2</span>
+    </div>
+    <div class="modal-title">🪪 Vérification d'identité</div>
+    <div class="modal-sub">Requis pour activer votre carte — vos données sont sécurisées</div>
+
+    <div class="modal-input-group">
+      <label class="modal-label">Type de document</label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid var(--blue);border-radius:12px;padding:12px;background:var(--surface2)">
+          <input type="radio" name="kyc-doc" value="cni" checked style="accent-color:var(--blue)">
+          <span style="font-size:18px">🪪</span>
+          <span style="font-weight:600;font-size:13px">Carte d'identité nationale (CIN)</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:12px">
+          <input type="radio" name="kyc-doc" value="passeport" style="accent-color:var(--blue)">
+          <span style="font-size:18px">📗</span>
+          <span style="font-weight:600;font-size:13px">Passeport</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:12px">
+          <input type="radio" name="kyc-doc" value="permis" style="accent-color:var(--blue)">
+          <span style="font-size:18px">🚗</span>
+          <span style="font-weight:600;font-size:13px">Permis de conduire</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-input-group">
+      <label class="modal-label">📎 Téléverser le document</label>
+      <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:var(--surface2)" onclick="showToast('Sélection de fichier — bientôt disponible 📎')">
+        <div style="font-size:32px;margin-bottom:8px">📄</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">Appuyez pour téléverser</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px">JPG, PNG ou PDF · Max 5 MB</div>
+      </div>
+    </div>
+
+    <button class="modal-btn" onclick="doAction('Carte virtuelle créée ! Vérification KYC en cours 🎉','kyc')">Soumettre et créer ma carte</button>
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--text-muted)">🔒 Vos données sont chiffrées et sécurisées</div>
+  </div>
+</div>
+
+<!-- RECHARGER CARTE -->
+<div class="modal-overlay" id="modal-card-recharge" onclick="closeModalOutside(event,'card-recharge')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('card-recharge')">×</button>
+    <div class="modal-title">💳 Recharger ma carte</div>
+    <div class="modal-sub">Choisissez votre méthode de recharge</div>
+    <div class="modal-input-group">
+      <label class="modal-label">Montant (HTG)</label>
+      <input class="modal-input" type="number" placeholder="Ex: 2,000" min="100">
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Méthode de recharge</label>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div onclick="selectRechargeMethod(this,'moncash')" class="recharge-option recharge-selected">
+          <span style="font-size:22px">📱</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">MonCash</div><div style="font-size:11px;color:var(--text-muted)">Rechargez via MonCash</div></div>
+          <span class="recharge-check">✓</span>
+        </div>
+        <div onclick="selectRechargeMethod(this,'natcash')" class="recharge-option">
+          <span style="font-size:22px">💳</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">NatCash</div><div style="font-size:11px;color:var(--text-muted)">Rechargez via NatCash</div></div>
+          <span class="recharge-check" style="opacity:0">✓</span>
+        </div>
+        <div onclick="selectRechargeMethod(this,'carte')" class="recharge-option">
+          <span style="font-size:22px">🏦</span>
+          <div style="flex:1"><div style="font-weight:700;font-size:14px">Carte de crédit / Bancaire</div><div style="font-size:11px;color:var(--text-muted)">Visa, Mastercard acceptées</div></div>
+          <span class="recharge-check" style="opacity:0">✓</span>
+        </div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="doAction('Carte rechargée avec succès ✅','card-recharge')">Recharger maintenant</button>
+  </div>
+</div>
+
+<!-- CONTACT / EMAIL -->
+<div class="modal-overlay" id="modal-contact" onclick="closeModalOutside(event,'contact')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('contact')">×</button>
+    <div class="modal-title">💬 Nous contacter</div>
+    <div class="modal-sub">Envoyez-nous un message, nous répondons sous 24h</div>
+    <div class="modal-input-group">
+      <label class="modal-label">Sujet</label>
+      <select class="modal-input" style="appearance:none">
+        <option>Problème avec mon compte</option>
+        <option>Question sur une transaction</option>
+        <option>Problème avec ma carte</option>
+        <option>Demande de remboursement</option>
+        <option>Autre</option>
+      </select>
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Votre message</label>
+      <textarea class="modal-input" rows="4" placeholder="Décrivez votre problème ou question en détail…" style="resize:none;line-height:1.5"></textarea>
+    </div>
+    <div class="modal-input-group">
+      <label class="modal-label">Votre email de réponse</label>
+      <input class="modal-input" type="email" placeholder="Ex: votre@email.com">
+    </div>
+    <button class="modal-btn" onclick="doAction('Message envoyé avec succès 📧 Nous vous répondrons sous 24h','contact')">Envoyer le message</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── SUPABASE CONFIG ──
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://zxsazjyzrnusthqcdztr.supabase.co',
+    'sb_publishable_48TO0VYxHm9Vtm9rUsIR8A_SYtDzYWf'
+  );
+
+  // ── CHARGER LE PROFIL UTILISATEUR ──
+  async function loadUserProfile() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) {
+      // Pas connecté → retour à la page de connexion
+      window.location.href = 'topcash_landing.html';
+      return;
+    }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    if (profile) {
+      // Afficher le nom
+      const nameEl = document.getElementById('header-name');
+      if (nameEl) nameEl.textContent = profile.prenom + ' ' + profile.nom;
+      // Afficher le solde
+      const solde = Number(profile.solde).toLocaleString('fr-FR');
+      const balanceEl = document.getElementById('balance-val');
+      if (balanceEl) balanceEl.textContent = solde;
+      _userSolde = profile.solde;
+    }
+    // Charger les transactions
+    loadTransactions(user.id);
+  }
+
+  let _userSolde = 0;
+
+  // ── CHARGER LES TRANSACTIONS ──
+  async function loadTransactions(userId) {
+    const { data: txs } = await sb
+      .from('transactions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!txs || txs.length === 0) return;
+    const container = document.getElementById('tx-list');
+    if (!container) return;
+    container.innerHTML = '';
+    txs.forEach(tx => {
+      const isCredit = tx.type === 'recharge';
+      const sign = isCredit ? '+' : '-';
+      const color = isCredit ? 'var(--success)' : 'var(--danger)';
+      const icon = tx.type === 'recharge' ? '💳' : tx.type === 'envoi' ? '📤' : '🏧';
+      container.innerHTML += `
+        <div class="tx-item">
+          <div class="tx-icon">${icon}</div>
+          <div class="tx-info">
+            <div class="tx-name">${tx.description || tx.type}</div>
+            <div class="tx-date">${new Date(tx.created_at).toLocaleDateString('fr-FR')}</div>
+          </div>
+          <div class="tx-amount" style="color:${color}">${sign}${Number(tx.montant).toLocaleString('fr-FR')} HTG</div>
+        </div>`;
+    });
+  }
+
+  // ── DÉCONNEXION ──
+  async function deconnexion() {
+    await sb.auth.signOut();
+    window.location.href = 'topcash_landing.html';
+  }
+
+  // Charger au démarrage
+  document.addEventListener('DOMContentLoaded', loadUserProfile);
+
+  // ── NAVIGATION ──
+  const pages = ['home','cards','transactions','services','settings'];
+  function goTo(id) {
+    pages.forEach(p => {
+      document.getElementById('page-'+p).classList.remove('active');
+      document.getElementById('nav-'+p).classList.remove('active');
+    });
+    document.getElementById('page-'+id).classList.add('active');
+    document.getElementById('nav-'+id).classList.add('active');
+    document.querySelector('#page-'+id).scrollTop = 0;
+  }
+
+  // ── BALANCE TOGGLE ──
+  let balanceHidden = false;
+  function toggleBalance() {
+    balanceHidden = !balanceHidden;
+    const solde = Number(_userSolde).toLocaleString('fr-FR');
+    document.getElementById('balance-val').textContent = balanceHidden ? '••,•••' : solde;
+  }
+
+  // ── MODALS ──
+  function openModal(id) {
+    document.getElementById('modal-'+id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById('modal-'+id).classList.remove('open');
+  }
+  function closeModalOutside(e, id) {
+    if (e.target === document.getElementById('modal-'+id)) closeModal(id);
+  }
+
+  // ── FILTER TABS ──
+  function setFilter(el) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ── NETWORK SELECT (Visa / Mastercard) ──
+  function selectNetwork(el, net) {
+    ['visa','mc'].forEach(n => {
+      const box = document.getElementById('net-'+n);
+      const chk = document.getElementById('check-'+n);
+      box.style.borderColor = 'var(--border)';
+      box.style.background = 'transparent';
+      chk.style.background = 'var(--border)';
+      chk.querySelector('span').style.color = 'transparent';
+    });
+    el.style.borderColor = 'var(--blue)';
+    el.style.background = 'var(--surface2)';
+    document.getElementById('check-'+net).style.background = 'var(--blue)';
+    document.getElementById('check-'+net).querySelector('span').style.color = '#fff';
+  }
+
+  // ── CARD TYPE SELECT ──
+  function selectCardType(el, type) {
+    document.querySelectorAll('[onclick*="selectCardType"]').forEach(e => {
+      e.style.borderColor = 'var(--border)';
+      e.style.background = 'transparent';
+    });
+    el.style.borderColor = 'var(--blue)';
+    el.style.background = 'var(--surface2)';
+  }
+
+  // ── RECHARGE METHOD SELECT ──
+  function selectRechargeMethod(el, method) {
+    el.closest('.modal-input-group').querySelectorAll('.recharge-option').forEach(o => {
+      o.classList.remove('recharge-selected');
+      o.querySelector('.recharge-check').style.opacity = '0';
+    });
+    el.classList.add('recharge-selected');
+    el.querySelector('.recharge-check').style.opacity = '1';
+  }
+
+  // ── WITHDRAW LIMIT CHECK ──
+  function checkWithdrawLimit(input) {
+    const method = document.getElementById('withdraw-method').value;
+    const msg = document.getElementById('withdraw-limit-msg');
+    if ((method === 'moncash' || method === 'natcash') && Number(input.value) > 100000) {
+      input.value = 100000;
+      msg.style.display = 'block';
+    } else {
+      msg.style.display = 'none';
+    }
+  }
+
+  // ── KYC STEP 2 ──
+  function goToKYC() {
+    closeModal('create-card');
+    setTimeout(() => openModal('kyc'), 300);
+  }
+
+  // ── WITHDRAW OTP (WhatsApp) ──
+  function initiateWithdrawOTP() {
+    const amount = document.getElementById('withdraw-amount').value;
+    if (!amount || amount < 100) { showToast('Veuillez saisir un montant valide ⚠️'); return; }
+    closeModal('recharge');
+    setTimeout(() => { openModal('withdraw-otp'); showToast('Code OTP envoyé sur WhatsApp 📲'); }, 300);
+  }
+  function confirmWithdrawOTP() {
+    const otp = document.getElementById('otp-input').value;
+    if (!otp || otp.length < 4) { showToast('Veuillez entrer le code OTP ⚠️'); return; }
+    doAction('Retrait confirmé et effectué avec succès ✅', 'withdraw-otp');
+  }
+
+  // ── CONTACT MODAL ──
+  function openContactModal() {
+    openModal('contact');
+  }
+
+  // ── THEME TOGGLE ──
+  let isDark = false;
+  function toggleTheme() {
+    isDark = !isDark;
+    document.body.classList.toggle('dark', isDark);
+    document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('theme-sub').textContent = isDark ? 'Mode sombre activé' : 'Mode clair';
+    showToast(isDark ? '🌙 Mode sombre activé' : '☀️ Mode clair activé');
+  }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function doAction(msg, modalId) {
+    closeModal(modalId);
+    setTimeout(() => showToast(msg), 300);
+  }
+
+  // ── 3D CARD CLICK (mobile) ──
+  let cardFlipped = false;
+  document.getElementById('mainCard').parentElement.addEventListener('click', function() {
+    const card = document.getElementById('mainCard');
+    cardFlipped = !cardFlipped;
+    card.style.transform = cardFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+  });
+
+  // ── DESKTOP : navigation sidebar ──
+  const dtPageTitles = {
+    home: 'Tableau de bord',
+    cards: 'Mes cartes',
+    transactions: 'Transactions',
+    services: 'Services',
+    settings: 'Paramètres'
+  };
+
+  function dtGoTo(pageId, btn) {
+    // Mettre à jour le titre
+    const titleEl = document.getElementById('dt-page-title');
+    if (titleEl) titleEl.textContent = dtPageTitles[pageId] || 'Tableau de bord';
+
+    // Mettre à jour l'état actif de la nav
+    document.querySelectorAll('.dt-nav-item').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    // Naviguer dans l'app mobile (dans le téléphone) si elle est présente
+    const phoneShell = document.querySelector('#dt-phone-screen .app-shell');
+    if (phoneShell) {
+      const phonepages = phoneShell.querySelectorAll('.page');
+      phonepages.forEach(p => p.classList.remove('active'));
+      const target = phoneShell.querySelector('#page-' + pageId);
+      if (target) target.classList.add('active');
+    }
+  }
+
+  // ── DESKTOP : balance toggle synchronisé ──
+  // (remplace la version mobile pour inclure le desktop)
+  balanceHidden = false;
+  function toggleBalance() {
+    balanceHidden = !balanceHidden;
+    const v = balanceHidden ? '••,•••' : '24,850';
+    const mobileVal = document.getElementById('balance-val');
+    if (mobileVal) mobileVal.textContent = v;
+    const dtVal = document.getElementById('dt-balance-val');
+    if (dtVal) dtVal.textContent = v;
+    // Clone dans le téléphone
+    const phVal = document.getElementById('ph-balance-val');
+    if (phVal) phVal.textContent = v;
+  }
+
+  // ── DESKTOP : miroir de l'app dans le cadre téléphone ──
+  (function() {
+    if (window.innerWidth < 900) return;
+    const phoneScreen = document.getElementById('dt-phone-screen');
+    if (!phoneScreen) return;
+
+    const appShell = document.querySelector('body > .app-shell');
+    if (!appShell) return;
+
+    const clone = appShell.cloneNode(true);
+    clone.style.maxWidth = '100%';
+    clone.style.boxShadow = 'none';
+    clone.style.display = 'flex';
+    clone.style.minHeight = '100%';
+
+    // Préfixer tous les id pour éviter les conflits
+    clone.querySelectorAll('[id]').forEach(el => {
+      el.id = 'ph-' + el.id;
+    });
+
+    phoneScreen.appendChild(clone);
+
+    // ── Rebranchement de la navigation dans le clone ──
+    const clonePages = ['home','cards','transactions','services','settings'];
+
+    function cloneGoTo(pageId) {
+      clonePages.forEach(p => {
+        const pg = clone.querySelector('#ph-page-' + p);
+        const nb = clone.querySelector('#ph-nav-' + p);
+        if (pg) pg.classList.remove('active');
+        if (nb) nb.classList.remove('active');
+      });
+      const target = clone.querySelector('#ph-page-' + pageId);
+      const navBtn = clone.querySelector('#ph-nav-' + pageId);
+      if (target) { target.classList.add('active'); target.scrollTop = 0; }
+      if (navBtn) navBtn.classList.add('active');
+    }
+
+    // Rebrancher les nav-item dans le clone
+    clone.querySelectorAll('.nav-item').forEach(btn => {
+      const origOnclick = btn.getAttribute('onclick') || '';
+      const match = origOnclick.match(/goTo\(['"](\w+)['"]\)/);
+      if (match) {
+        btn.removeAttribute('onclick');
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          cloneGoTo(match[1]);
+        });
+      }
+    });
+
+    // Rebrancher les boutons quick-actions et autres qui appellent openModal
+    clone.querySelectorAll('[onclick]').forEach(el => {
+      const orig = el.getAttribute('onclick');
+      // openModal / closeModal → cibler les modals dans le document principal
+      // (les modals restent dans le DOM principal, pas dans le clone)
+      // On laisse les autres appels (showToast, toggleBalance, etc.) fonctionner normalement
+      const navMatch = orig.match(/goTo\(['"](\w+)['"]\)/);
+      if (navMatch) {
+        el.removeAttribute('onclick');
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          cloneGoTo(navMatch[1]);
+        });
+      }
+    });
+  })();
+</script>
+</body>
+</html>

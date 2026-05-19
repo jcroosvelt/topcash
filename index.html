@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopCash – Payez • Transférez • Avancez</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1A3FAA;
+    --blue-dark: #0f2778;
+    --blue-light: #2855d4;
+    --gold: #F7A800;
+    --gold-light: #FFD452;
+    --gold-dark: #d18e00;
+    --bg: #F0F4FF;
+    --surface: #ffffff;
+    --surface2: #EEF2FF;
+    --text: #0f1b3d;
+    --text-muted: #6B7A9E;
+    --border: #dde4f5;
+    --success: #00C48C;
+    --danger: #FF4D6A;
+    --shadow: 0 8px 32px rgba(26,63,170,0.10);
+  }
+
+  html, body { min-height:100%; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
+
+  .app-shell { max-width:430px; margin:0 auto; min-height:100dvh; background:var(--bg); position:relative; display:flex; flex-direction:column; }
+  @media (min-width:431px) { .app-shell { box-shadow:0 0 0 1px rgba(0,0,0,.08),0 24px 80px rgba(0,0,0,.12); } }
+
+  .screen { display:none; flex-direction:column; min-height:100dvh; animation:fadeIn .35s ease; }
+  .screen.active { display:flex; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  @keyframes pop { from{transform:scale(.3);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .blob { position:absolute; border-radius:50%; pointer-events:none; }
+  .blob-1 { width:300px;height:300px;top:-80px;right:-80px;background:rgba(247,168,0,.13); }
+  .blob-2 { width:200px;height:200px;top:180px;left:-60px;background:rgba(255,255,255,.06); }
+  .blob-3 { width:160px;height:160px;bottom:120px;right:-40px;background:rgba(247,168,0,.08); }
+
+  /* ── SPLASH ── */
+  #screen-splash {
+    background:#ffffff;
+    align-items:center; justify-content:space-between; padding:0 0 48px; position:relative; overflow:hidden;
+  }
+  .splash-topbar { width:100%;display:flex;justify-content:space-between;align-items:center;padding:56px 28px 0;position:relative;z-index:2; }
+  .skip-btn { background:rgba(26,63,170,.08);border:1px solid rgba(26,63,170,.18);color:var(--blue);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:.2s; }
+  .skip-btn:hover { background:rgba(26,63,170,.15); }
+  .splash-hero { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:2;padding:32px 28px; }
+
+  /* mock card */
+  .mock-card { width:280px;aspect-ratio:1.586;background:linear-gradient(135deg,#5b9cff 0%,#3a70e8 45%,#2855d4 100%);border-radius:20px;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.45),0 10px 30px rgba(0,0,0,.3);position:relative;overflow:hidden;transform:perspective(800px) rotateY(-8deg) rotateX(4deg);transition:transform .4s ease;margin-bottom:32px; }
+  .mock-card-toprow { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px; }
+  .mock-card:hover { transform:perspective(800px) rotateY(0) rotateX(0); }
+  .mock-card::before { content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 50%); }
+  .mock-card-accent { position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light),var(--gold));border-radius:0 0 20px 20px; }
+  .mock-chip { width:40px;height:30px;background:linear-gradient(135deg,#FFD452,#F7A800,#d18e00);border-radius:6px;margin-top:4px;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.3); }
+  .mock-chip::after { content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,.2); }
+  .mock-chip::before { content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.2); }
+  .mock-number { font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,.85);margin-top:14px;margin-bottom:10px; }
+  .mock-card-bottom { display:flex;justify-content:space-between;align-items:flex-end; }
+  .mock-name { color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px; }
+  .mock-circles { display:flex;margin-top:4px; }
+  .mock-c { width:26px;height:26px;border-radius:50%;opacity:.9; }
+  .mock-c1 { background:#EB001B; }
+  .mock-c2 { background:#F79E1B;margin-left:-10px; }
+
+  .splash-headline { text-align:center; }
+  .splash-headline h1 { font-family:'Nunito',sans-serif;font-weight:900;font-size:28px;color:var(--text);line-height:1.2;margin-bottom:10px; }
+  .splash-headline h1 em { color:var(--blue);font-style:normal; }
+  .splash-headline p { color:var(--text-muted);font-size:14px;line-height:1.6;max-width:300px;margin:0 auto; }
+
+  .dots { display:flex;gap:6px;justify-content:center;margin-bottom:20px;position:relative;z-index:2; }
+  .dot { width:8px;height:8px;border-radius:4px;background:var(--border);transition:.3s; }
+  .dot.active { width:24px;background:var(--blue); }
+
+  .splash-cta { width:100%;padding:0 24px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2; }
+  .splash-footer { text-align:center;color:var(--text-muted);font-size:11px;margin-top:16px;padding:0 24px;position:relative;z-index:2; }
+
+  /* ── SPLASH — override btn-outline-white pour fond blanc ── */
+  #screen-splash .btn-outline-white {
+    border-color: rgba(26,63,170,.3);
+    background: rgba(26,63,170,.06);
+    color: var(--blue);
+  }
+  #screen-splash .btn-outline-white:hover {
+    background: rgba(26,63,170,.12);
+  }
+
+  /* ── BUTTONS ── */
+  .btn-gold { width:100%;border:none;border-radius:16px;padding:17px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0f1b3d;box-shadow:0 6px 24px rgba(247,168,0,.45);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px; }
+  .btn-gold:hover { transform:translateY(-1px);box-shadow:0 10px 30px rgba(247,168,0,.5); }
+  .btn-gold:active { transform:scale(.98); }
+  .btn-outline-white { width:100%;border:2px solid rgba(255,255,255,.3);border-radius:16px;padding:15px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;background:rgba(255,255,255,.1);color:#fff;transition:.2s; }
+  .btn-outline-white:hover { background:rgba(255,255,255,.18); }
+  .btn-blue { width:100%;border:none;border-radius:16px;padding:17px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--blue-light),var(--blue-dark));color:#fff;box-shadow:0 6px 24px rgba(26,63,170,.35);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px; }
+  .btn-blue:hover { transform:translateY(-1px); }
+  .btn-blue:active { transform:scale(.98); }
+
+  /* ── AUTH COMMON ── */
+  .auth-header { background:#ffffff;padding:52px 24px 30px;border-radius:0 0 32px 32px;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(26,63,170,.08); }
+  .auth-header::before { content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(26,63,170,.05); }
+  .auth-header::after { content:'';position:absolute;bottom:-60px;left:-30px;width:160px;height:160px;border-radius:50%;background:rgba(247,168,0,.06); }
+  .auth-back { width:40px;height:40px;border-radius:50%;background:rgba(26,63,170,.08);border:none;color:var(--blue);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;z-index:2;transition:.2s; }
+  .auth-back:hover { background:rgba(26,63,170,.15); }
+  .auth-header-logo { position:relative;z-index:2;margin-bottom:8px;display:block; }
+  .auth-header h2 { font-family:'Nunito',sans-serif;font-weight:900;font-size:24px;color:var(--text);position:relative;z-index:2;margin-bottom:4px; }
+  .auth-header p { color:var(--text-muted);font-size:13px;position:relative;z-index:2; }
+  .auth-body { flex:1;padding:28px 24px 48px;overflow-y:auto; }
+  .auth-switch { text-align:center;font-size:14px;color:var(--text-muted);margin-top:24px; }
+  .auth-switch a { color:var(--blue);font-weight:700;cursor:pointer;text-decoration:none; }
+
+  /* ── FORMS ── */
+  .form-group { margin-bottom:18px; }
+  .form-label { font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:7px;display:block;text-transform:uppercase;letter-spacing:.7px; }
+  .form-input-wrap { position:relative; }
+  .form-input-icon { position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none; }
+  .form-input { width:100%;border:2px solid var(--border);border-radius:14px;padding:14px 16px 14px 46px;font-size:15px;font-family:'Poppins',sans-serif;color:var(--text);background:var(--surface);outline:none;transition:.2s; }
+  .form-input:focus { border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(26,63,170,.08); }
+  .form-input.error { border-color:var(--danger); }
+  .form-input::placeholder { color:#b0b9d4; }
+  .password-toggle { position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:var(--text-muted);padding:4px; }
+  .field-error { font-size:11px;color:var(--danger);margin-top:5px;display:none;font-weight:600; }
+  .field-error.visible { display:block; }
+
+  .form-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+  .phone-prefix { position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--text);pointer-events:none;white-space:nowrap; }
+  .form-input.phone-field { padding-left:90px; }
+
+  .strength-bar { height:4px;border-radius:2px;background:var(--border);margin-top:8px;overflow:hidden; }
+  .strength-fill { height:100%;border-radius:2px;width:0%;transition:width .3s,background .3s; }
+  .strength-label { font-size:11px;color:var(--text-muted);margin-top:4px; }
+
+  .terms-label { display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-muted);cursor:pointer;line-height:1.6;margin-bottom:16px; }
+  .terms-label input { margin-top:3px;accent-color:var(--blue);flex-shrink:0;width:17px;height:17px; }
+  .terms-label a { color:var(--blue);font-weight:600; }
+
+  .form-options { display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;margin-top:-4px; }
+  .remember-label { display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);cursor:pointer; }
+  .remember-label input { width:17px;height:17px;accent-color:var(--blue); }
+  .forgot-link { font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;background:none;border:none;font-family:'Poppins',sans-serif; }
+
+  /* ── STEPS BAR ── */
+  .steps-bar { display:flex;gap:6px;margin-top:16px;position:relative;z-index:2; }
+  .step-seg { flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s; }
+  .step-seg.done { background:var(--gold); }
+  .step-seg.active { background:var(--blue); }
+
+  /* ── OTP SCREEN ── */
+  .otp-body { flex:1;padding:32px 24px 48px;display:flex;flex-direction:column;align-items:center; }
+  .otp-icon { font-size:52px;margin-bottom:14px; }
+  .otp-title { font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--text);margin-bottom:8px;text-align:center; }
+  .otp-sub { font-size:13px;color:var(--text-muted);text-align:center;line-height:1.6;margin-bottom:24px; }
+  .otp-sub strong { color:var(--text);font-weight:700; }
+  .whatsapp-badge { display:flex;align-items:center;gap:8px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:10px 14px;margin-bottom:24px;font-size:12px;font-weight:600;color:#2e7d32;width:100%; }
+  .otp-inputs { display:flex;gap:10px;justify-content:center;margin-bottom:6px; }
+  .otp-input { width:48px;height:58px;border-radius:14px;border:2px solid var(--border);text-align:center;font-size:22px;font-weight:800;font-family:'Nunito',sans-serif;color:var(--text);background:var(--surface);outline:none;transition:.2s; }
+  .otp-input:focus { border-color:var(--blue);box-shadow:0 0 0 4px rgba(26,63,170,.08); }
+  .otp-input.filled { border-color:var(--blue);background:var(--surface2); }
+  .otp-timer { font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:20px; }
+  .otp-timer span { color:var(--blue);font-weight:700; }
+  .otp-resend { background:none;border:none;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;margin-top:12px; }
+  .otp-resend:disabled { color:var(--text-muted);cursor:default; }
+
+  /* ── SUCCESS ── */
+  #screen-success { background:linear-gradient(160deg,var(--blue-dark) 0%,var(--blue) 60%,#1e52cc 100%);align-items:center;justify-content:center;padding:40px 32px;text-align:center;position:relative;overflow:hidden; }
+  .success-blob-1 { width:250px;height:250px;top:-60px;right:-80px;background:rgba(247,168,0,.12); }
+  .success-blob-2 { width:180px;height:180px;bottom:80px;left:-50px;background:rgba(255,255,255,.06); }
+  .success-badge { width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 24px;box-shadow:0 12px 40px rgba(247,168,0,.5);position:relative;z-index:2;animation:pop .5s cubic-bezier(.23,1,.32,1) .2s both; }
+  .success-title { font-family:'Nunito',sans-serif;font-weight:900;font-size:28px;color:#fff;margin-bottom:10px;position:relative;z-index:2; }
+  .success-title em { color:var(--gold);font-style:normal; }
+  .success-sub { color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;max-width:300px;margin:0 auto 28px;position:relative;z-index:2; }
+  .success-features { width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;position:relative;z-index:2; }
+  .success-feat { background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;text-align:left; }
+  .feat-icon { font-size:22px;flex-shrink:0; }
+  .feat-title { font-weight:600;font-size:13px;color:#fff; }
+  .feat-sub { font-size:11px;color:rgba(255,255,255,.55); }
+  .btn-gold-full { width:100%;border:none;border-radius:16px;padding:17px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0f1b3d;box-shadow:0 6px 24px rgba(247,168,0,.45);transition:.2s;position:relative;z-index:2; }
+  .btn-gold-full:active { transform:scale(.98); }
+
+  /* ── MODAL ── */
+  .modal-overlay { position:fixed;inset:0;background:rgba(15,23,61,.55);backdrop-filter:blur(6px);z-index:300;display:none;align-items:flex-end;justify-content:center; }
+  .modal-overlay.open { display:flex;animation:fadeIn .2s ease; }
+  .modal { background:var(--surface);border-radius:28px 28px 0 0;padding:28px 24px 48px;width:100%;max-width:430px;animation:slideUp .3s cubic-bezier(.23,1,.32,1);position:relative; }
+  .modal-handle { width:44px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px; }
+  .modal-close { position:absolute;top:20px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted); }
+  .modal-title { font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;margin-bottom:6px; }
+  .modal-sub { color:var(--text-muted);font-size:13px;margin-bottom:20px;line-height:1.6; }
+  .modal-step { display:none; }
+  .modal-step.active { display:block; }
+
+  /* ── TOAST ── */
+  .toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f1b3d;color:#fff;border-radius:12px;padding:12px 22px;font-size:13px;font-weight:600;white-space:nowrap;z-index:500;opacity:0;transition:.3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+
+  ::-webkit-scrollbar { width:0;height:0; }
+
+  /* ══════════════════════════════════════
+     DESKTOP LAYOUT — ≥ 900px
+  ══════════════════════════════════════ */
+  @media (min-width: 900px) {
+
+    body { background: linear-gradient(135deg, #0b1a5c 0%, #1A3FAA 55%, #0f2778 100%); overflow: auto; }
+
+    /* Page entière en deux colonnes */
+    .desktop-wrapper {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1300px;
+      margin: 0 auto;
+      align-items: center;
+      gap: 64px;
+      padding: 48px 60px;
+    }
+
+    /* Colonne gauche — marketing */
+    .desktop-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      color: #fff;
+    }
+
+    .desktop-logo {
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .desktop-tagline {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(32px, 3.5vw, 52px);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+    .desktop-tagline em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .desktop-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.7;
+      margin-bottom: 44px;
+      max-width: 420px;
+    }
+
+    .desktop-features {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    .desktop-feat {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding: 18px 22px;
+      backdrop-filter: blur(8px);
+      transition: background .25s;
+    }
+    .desktop-feat:hover { background: rgba(255,255,255,.14); }
+
+    .desktop-feat-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      background: rgba(247,168,0,.18);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .desktop-feat-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .desktop-feat-text span {
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.5;
+    }
+
+    .desktop-badges {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .desktop-badge {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,.8);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* Colonne droite — mockup téléphone */
+    .desktop-right {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 780px;
+      background: #0a0a0f;
+      border-radius: 54px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.08),
+        0 40px 120px rgba(0,0,0,.7),
+        0 8px 30px rgba(0,0,0,.4),
+        inset 0 0 0 2px rgba(255,255,255,.05);
+      position: relative;
+    }
+
+    /* Encoche (notch) */
+    .phone-notch {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      background: #0a0a0f;
+      border-radius: 0 0 22px 22px;
+      z-index: 20;
+    }
+
+    /* Boutons côté */
+    .phone-btn-right {
+      position: absolute;
+      right: -3px;
+      top: 140px;
+      width: 3px;
+      height: 60px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .phone-btn-left-1 {
+      position: absolute;
+      left: -3px;
+      top: 100px;
+      width: 3px;
+      height: 34px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .phone-btn-left-2 {
+      position: absolute;
+      left: -3px;
+      top: 148px;
+      width: 3px;
+      height: 60px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .phone-btn-left-3 {
+      position: absolute;
+      left: -3px;
+      top: 222px;
+      width: 3px;
+      height: 60px;
+      background: #222;
+      border-radius: 2px;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 42px;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg);
+    }
+
+    .phone-screen .app-shell {
+      max-width: 100% !important;
+      box-shadow: none !important;
+      min-height: 100%;
+    }
+
+    .phone-screen .screen {
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .phone-screen iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Cacher le wrapper mobile normal sur desktop */
+    body > .app-shell { display: none; }
+
+    /* Glow ambiant sous le téléphone */
+    .phone-glow {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 60px;
+      background: rgba(26,63,170,.6);
+      filter: blur(40px);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+  }
+
+  /* En dessous de 900px : cacher le layout desktop */
+  @media (max-width: 899px) {
+    .desktop-wrapper { display: none !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══════ LAYOUT DESKTOP (≥ 900px) ══════ -->
+<div class="desktop-wrapper">
+
+  <!-- Colonne gauche : marketing -->
+  <div class="desktop-left">
+    <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+         alt="TopCash" class="desktop-logo">
+
+    <div class="desktop-tagline">
+      Votre argent,<br><em>en toute sécurité.</em>
+    </div>
+
+    <p class="desktop-sub">
+      TopCash vous donne le contrôle total de vos finances en Haïti et à l'étranger.
+      Achetez, payez et profitez de nos services.
+    </p>
+
+    <div class="desktop-features">
+      <div class="desktop-feat">
+        <div class="desktop-feat-icon">💳</div>
+        <div class="desktop-feat-text">
+          <strong>Carte virtuelle en 30 secondes</strong>
+          <span>Visa ou Mastercard, payez partout dans le monde en ligne</span>
+        </div>
+      </div>
+      <div class="desktop-feat">
+        <div class="desktop-feat-icon">↗️</div>
+        <div class="desktop-feat-text">
+          <strong>Transferts instantanés sans frais</strong>
+          <span>Envoyez de l'argent à vos proches en quelques clics</span>
+        </div>
+      </div>
+      <div class="desktop-feat">
+        <div class="desktop-feat-icon">📲</div>
+        <div class="desktop-feat-text">
+          <strong>Compatible MonCash & NatCash</strong>
+          <span>Rechargez depuis vos applications habituelles</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="desktop-badges">
+      <div class="desktop-badge">🇭🇹 &nbsp;Fait pour Haïti</div>
+      <div class="desktop-badge">🔒 &nbsp;100% sécurisé</div>
+      <div class="desktop-badge">⚡ &nbsp;Compte gratuit</div>
+      <div class="desktop-badge">🌐 &nbsp;Paiements internationaux</div>
+    </div>
+  </div>
+
+  <!-- Colonne droite : téléphone -->
+  <div class="desktop-right">
+    <div style="position:relative;">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-btn-right"></div>
+        <div class="phone-btn-left-1"></div>
+        <div class="phone-btn-left-2"></div>
+        <div class="phone-btn-left-3"></div>
+        <div class="phone-screen" id="desktop-phone-screen">
+          <!-- Le contenu de l'app est injecté ici via JS -->
+        </div>
+      </div>
+      <div class="phone-glow"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ══════ FIN LAYOUT DESKTOP ══════ -->
+
+<div class="app-shell">
+
+  <!-- ════════ SCREEN 1 — SPLASH ════════ -->
+  <div class="screen active" id="screen-splash">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="splash-topbar">
+      <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+           alt="TopCash" style="height:90px;object-fit:contain;">
+      <button class="skip-btn" onclick="goTo('login')">Connexion</button>
+    </div>
+
+    <div class="splash-hero">
+      <div class="mock-card">
+        <div class="mock-card-toprow">
+          <div class="mock-chip"></div>
+          <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+               alt="TopCash" style="height:90px;object-fit:contain;display:block">
+        </div>
+        <div class="mock-number">•••• •••• •••• 4582</div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:8px;color:rgba(255,255,255,.55);font-family:'Poppins',sans-serif;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;">Expire</div>
+          <div style="font-size:13px;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:1.5px;">12/28</div>
+        </div>
+        <div class="mock-card-bottom">
+          <div>
+            <div class="mock-name">J. PIERRE</div>
+          </div>
+          <div class="mock-circles">
+            <div class="mock-c mock-c1"></div>
+            <div class="mock-c mock-c2"></div>
+          </div>
+        </div>
+        <div class="mock-card-accent"></div>
+      </div>
+
+      <div class="splash-headline">
+        <h1>Votre argent,<br><em>en toute sécurité.</em></h1>
+        <p>Payez, transférez et gérez votre argent avec TopCash.</p>
+      </div>
+    </div>
+
+    <div class="dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div class="splash-cta">
+      <button class="btn-gold" onclick="goTo('register')">🚀 &nbsp;Créer un compte gratuit</button>
+      <button class="btn-outline-white" onclick="goTo('login')">Se connecter</button>
+    </div>
+    <div class="splash-footer" style="margin-top:18px">
+      En continuant, vous acceptez nos <u style="cursor:pointer">Conditions d'utilisation</u>
+    </div>
+  </div>
+
+
+  <!-- ════════ SCREEN 2 — CONNEXION ════════ -->
+  <div class="screen" id="screen-login">
+    <div class="auth-header">
+      <button class="auth-back" onclick="goTo('splash')">←</button>
+      <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
+      <h2>Bon retour 👋</h2>
+      <p>Connectez-vous à votre compte</p>
+    </div>
+
+    <div class="auth-body">
+      <div class="form-group">
+        <label class="form-label">Numéro de téléphone</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">📱</span>
+          <input class="form-input" type="tel" placeholder="+509 3712-0000" id="login-phone">
+        </div>
+        <div class="field-error" id="err-login-phone"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">🔒</span>
+          <input class="form-input" type="password" placeholder="••••••••" id="login-pwd">
+          <button class="password-toggle" onclick="togglePwd('login-pwd',this)" type="button">👁</button>
+        </div>
+        <div class="field-error" id="err-login-pwd"></div>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-label">
+          <input type="checkbox" checked> Se souvenir de moi
+        </label>
+        <button class="forgot-link" onclick="openForgotModal()">Mot de passe oublié ?</button>
+      </div>
+
+      <button class="btn-blue" onclick="handleLogin()">Se connecter &nbsp;→</button>
+
+      <div class="auth-switch">
+        Pas encore de compte ? <a onclick="goTo('register')">Créer un compte</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════ SCREEN 3 — INSCRIPTION ════════ -->
+  <div class="screen" id="screen-register">
+    <div class="auth-header">
+      <button class="auth-back" onclick="goTo('splash')">←</button>
+      <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
+      <h2>Créez votre compte</h2>
+      <p>Rejoignez des milliers d'utilisateurs en Haïti</p>
+      <div class="steps-bar">
+        <div class="step-seg active" id="seg-1"></div>
+        <div class="step-seg" id="seg-2"></div>
+      </div>
+    </div>
+
+    <div class="auth-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">👤</span>
+            <input class="form-input" type="text" placeholder="Jean" id="reg-fname" oninput="updateSteps()">
+          </div>
+          <div class="field-error" id="err-fname"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon" style="font-size:13px;font-weight:700;color:#c0c8e0;left:12px">NOM</span>
+            <input class="form-input" type="text" placeholder="Pierre" id="reg-lname" oninput="updateSteps()">
+          </div>
+          <div class="field-error" id="err-lname"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Adresse e-mail</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">✉️</span>
+          <input class="form-input" type="email" placeholder="j.pierre@gmail.com" id="reg-email" oninput="updateSteps()">
+        </div>
+        <div class="field-error" id="err-email"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Numéro de téléphone</label>
+        <div class="form-input-wrap">
+          <span class="phone-prefix">🇭🇹 +509</span>
+          <input class="form-input phone-field" type="tel" placeholder="3712-0000" id="reg-phone" oninput="updateSteps()">
+        </div>
+        <div class="field-error" id="err-phone"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">🔒</span>
+          <input class="form-input" type="password" placeholder="Min. 8 car. + 1 chiffre + 1 spécial" id="reg-pwd" oninput="checkStrength(this.value)">
+          <button class="password-toggle" onclick="togglePwd('reg-pwd',this)" type="button">👁</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+        <div class="strength-label" id="strength-label">Entrez un mot de passe</div>
+        <div class="field-error" id="err-pwd"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirmer le mot de passe</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">🔒</span>
+          <input class="form-input" type="password" placeholder="Répétez le mot de passe" id="reg-pwd2">
+          <button class="password-toggle" onclick="togglePwd('reg-pwd2',this)" type="button">👁</button>
+        </div>
+        <div class="field-error" id="err-pwd2"></div>
+      </div>
+
+      <label class="terms-label">
+        <input type="checkbox" id="reg-terms">
+        J'accepte les <a onclick="showToast('📄 CGU TopCash')">Conditions Générales d'Utilisation</a>
+        et la <a onclick="showToast('🔏 Politique de confidentialité')">Politique de confidentialité</a> de TopCash.
+      </label>
+      <div class="field-error" id="err-terms" style="margin-top:-10px;margin-bottom:16px"></div>
+
+      <button class="btn-gold" onclick="handleRegister()">Continuer &nbsp;→</button>
+
+      <div class="auth-switch">
+        Déjà membre ? <a onclick="goTo('login')">Se connecter</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════ SCREEN 4 — VÉRIFICATION OTP ════════ -->
+  <div class="screen" id="screen-otp">
+    <div class="auth-header">
+      <button class="auth-back" onclick="goTo('register')">←</button>
+      <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
+      <h2>Vérification WhatsApp</h2>
+      <p>Étape 2 sur 2 — Confirmez votre numéro</p>
+      <div class="steps-bar">
+        <div class="step-seg done"></div>
+        <div class="step-seg active"></div>
+      </div>
+    </div>
+
+    <div class="otp-body">
+      <div class="otp-icon">💬</div>
+      <div class="otp-title">Code envoyé sur WhatsApp</div>
+      <div class="otp-sub">
+        Un code à 6 chiffres a été envoyé au<br>
+        <strong id="otp-phone-display">+509 ••••-••••</strong>
+      </div>
+      <div class="whatsapp-badge">
+        <span style="font-size:20px">📲</span>
+        Vérifiez WhatsApp et entrez le code ci-dessous
+      </div>
+      <div class="otp-inputs">
+        <input class="otp-input" type="text" maxlength="1" id="otp-0" oninput="otpNext(this,0)" onkeydown="otpBack(event,0)">
+        <input class="otp-input" type="text" maxlength="1" id="otp-1" oninput="otpNext(this,1)" onkeydown="otpBack(event,1)">
+        <input class="otp-input" type="text" maxlength="1" id="otp-2" oninput="otpNext(this,2)" onkeydown="otpBack(event,2)">
+        <input class="otp-input" type="text" maxlength="1" id="otp-3" oninput="otpNext(this,3)" onkeydown="otpBack(event,3)">
+        <input class="otp-input" type="text" maxlength="1" id="otp-4" oninput="otpNext(this,4)" onkeydown="otpBack(event,4)">
+        <input class="otp-input" type="text" maxlength="1" id="otp-5" oninput="otpNext(this,5)" onkeydown="otpBack(event,5)">
+      </div>
+      <div class="field-error" id="err-otp" style="text-align:center;margin-bottom:4px"></div>
+
+      <div class="otp-timer">
+        Code valide pendant <span id="otp-countdown">02:00</span>
+      </div>
+
+      <button class="btn-blue" style="width:100%" onclick="verifyOtp()">Vérifier mon numéro ✓</button>
+      <button class="otp-resend" id="otp-resend-btn" disabled onclick="resendOtp()">Renvoyer le code</button>
+
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:16px">
+        Pour tester : entrez le code <strong>123456</strong>
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ════════ SCREEN 5 — SUCCESS ════════ -->
+  <div class="screen" id="screen-success">
+    <div class="blob success-blob-1 blob"></div>
+    <div class="blob success-blob-2 blob"></div>
+    <div class="success-badge">🎉</div>
+    <div class="success-title">Bienvenue sur<br><em>TopCash !</em></div>
+    <div class="success-sub">
+      Votre compte a été créé et vérifié avec succès. Profitez de tous les services TopCash.
+    </div>
+    <div class="success-features">
+      <div class="success-feat">
+        <div class="feat-icon">💳</div>
+        <div>
+          <div class="feat-title">Carte virtuelle prête en 30 sec</div>
+          <div class="feat-sub">Payez partout en ligne dès maintenant</div>
+        </div>
+      </div>
+      <div class="success-feat">
+        <div class="feat-icon">↗️</div>
+        <div>
+          <div class="feat-title">Transferts instantanés</div>
+          <div class="feat-sub">Envoyez de l'argent à vos proches sans frais</div>
+        </div>
+      </div>
+      <div class="success-feat">
+        <div class="feat-icon">📲</div>
+        <div>
+          <div class="feat-title">Compatible MonCash & Natcash</div>
+          <div class="feat-sub">Rechargez depuis vos applications habituelles</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-gold-full" onclick="showToast('🚀 Chargement de votre tableau de bord…')">
+      Accéder à mon compte →
+    </button>
+  </div>
+
+</div><!-- /app-shell -->
+
+
+<!-- ════════ MODAL — MOT DE PASSE OUBLIÉ ════════ -->
+<div class="modal-overlay" id="modal-forgot" onclick="closeForgotOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('forgot')">×</button>
+
+    <!-- Étape 1 : numéro -->
+    <div class="modal-step active" id="forgot-step-1">
+      <div class="modal-title">🔑 Mot de passe oublié</div>
+      <div class="modal-sub">Entrez votre numéro de téléphone. Vous recevrez un code OTP via <strong>WhatsApp</strong>.</div>
+      <div class="form-group">
+        <label class="form-label">Numéro de téléphone</label>
+        <div class="form-input-wrap">
+          <span class="phone-prefix">🇭🇹 +509</span>
+          <input class="form-input phone-field" type="tel" placeholder="3712-0000" id="forgot-phone">
+        </div>
+        <div class="field-error" id="err-forgot-phone"></div>
+      </div>
+      <button class="btn-blue" onclick="forgotSendOtp()">📲 &nbsp;Recevoir le code WhatsApp</button>
+    </div>
+
+    <!-- Étape 2 : OTP -->
+    <div class="modal-step" id="forgot-step-2">
+      <div class="modal-title">💬 Code WhatsApp</div>
+      <div class="modal-sub">Code envoyé au <strong id="forgot-phone-display"></strong>. Entrez-le ci-dessous.</div>
+      <div class="otp-inputs" style="margin-bottom:8px">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-0" oninput="fotpNext(this,0)" onkeydown="fotpBack(event,0)">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-1" oninput="fotpNext(this,1)" onkeydown="fotpBack(event,1)">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-2" oninput="fotpNext(this,2)" onkeydown="fotpBack(event,2)">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-3" oninput="fotpNext(this,3)" onkeydown="fotpBack(event,3)">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-4" oninput="fotpNext(this,4)" onkeydown="fotpBack(event,4)">
+        <input class="otp-input" type="text" maxlength="1" id="fotp-5" oninput="fotpNext(this,5)" onkeydown="fotpBack(event,5)">
+      </div>
+      <div class="field-error" id="err-fotp" style="text-align:center;margin-bottom:12px"></div>
+      <button class="btn-blue" onclick="forgotVerifyOtp()">Valider le code</button>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px">Code de test : <strong>123456</strong></p>
+    </div>
+
+    <!-- Étape 3 : nouveau mot de passe -->
+    <div class="modal-step" id="forgot-step-3">
+      <div class="modal-title">🔒 Nouveau mot de passe</div>
+      <div class="modal-sub">Choisissez un nouveau mot de passe sécurisé.</div>
+      <div class="form-group">
+        <label class="form-label">Nouveau mot de passe</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">🔒</span>
+          <input class="form-input" type="password" placeholder="Min. 8 car. + 1 chiffre + 1 spécial" id="new-pwd" oninput="checkStrengthNew(this.value)">
+          <button class="password-toggle" onclick="togglePwd('new-pwd',this)" type="button">👁</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="new-strength-fill"></div></div>
+        <div class="strength-label" id="new-strength-label">Entrez un mot de passe</div>
+        <div class="field-error" id="err-new-pwd"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmer</label>
+        <div class="form-input-wrap">
+          <span class="form-input-icon">🔒</span>
+          <input class="form-input" type="password" placeholder="Répétez le mot de passe" id="new-pwd2">
+          <button class="password-toggle" onclick="togglePwd('new-pwd2',this)" type="button">👁</button>
+        </div>
+        <div class="field-error" id="err-new-pwd2"></div>
+      </div>
+      <button class="btn-blue" onclick="forgotReset()">Réinitialiser et se connecter</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── SUPABASE CONFIG ──
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://zxsazjyzrnusthqcdztr.supabase.co',
+    'sb_publishable_48TO0VYxHm9Vtm9rUsIR8A_SYtDzYWf'
+  );
+
+  // ── NAVIGATION ──
+  const screens = ['splash','login','register','otp','success'];
+  function goTo(id) {
+    screens.forEach(s => document.getElementById('screen-' + s).classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── PASSWORD TOGGLE ──
+  function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+  }
+
+  // ── PASSWORD STRENGTH ──
+  function _applyStrength(fillId, labelId, val) {
+    const fill = document.getElementById(fillId);
+    const lbl  = document.getElementById(labelId);
+    if (!val) { fill.style.width='0%'; lbl.textContent='Entrez un mot de passe'; lbl.style.color='var(--text-muted)'; return; }
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const levels = [{w:'25%',c:'var(--danger)',t:'Très faible'},{w:'50%',c:'#FF8C42',t:'Faible'},{w:'75%',c:'var(--gold)',t:'Moyen'},{w:'100%',c:'var(--success)',t:'Fort ✅'}];
+    const l = levels[score-1] || levels[0];
+    fill.style.width=l.w; fill.style.background=l.c; lbl.textContent=l.t; lbl.style.color=l.c;
+  }
+  function checkStrength(val)    { _applyStrength('strength-fill','strength-label',val); }
+  function checkStrengthNew(val) { _applyStrength('new-strength-fill','new-strength-label',val); }
+
+  function isValidPassword(pwd) {
+    return pwd.length >= 8 && /[0-9]/.test(pwd) && /[^A-Za-z0-9]/.test(pwd);
+  }
+
+  // ── FIELD ERRORS ──
+  function setError(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.toggle('visible', !!msg);
+  }
+  function clearErrors(...ids) { ids.forEach(id => setError(id, '')); }
+
+  // ── STEPS (register) ──
+  function updateSteps() {
+    const filled = ['reg-fname','reg-lname','reg-email','reg-phone'].every(id => document.getElementById(id).value.trim());
+    document.getElementById('seg-1').className = 'step-seg ' + (filled ? 'done' : 'active');
+    document.getElementById('seg-2').className = 'step-seg ' + (filled ? 'active' : '');
+  }
+
+  // ── LOGIN ──
+  async function handleLogin() {
+    clearErrors('err-login-phone','err-login-pwd');
+    const phone = document.getElementById('login-phone').value.trim();
+    const pwd   = document.getElementById('login-pwd').value;
+    let ok = true;
+    if (!phone) { setError('err-login-phone','Veuillez entrer votre numéro de téléphone'); ok=false; }
+    if (!pwd)   { setError('err-login-pwd','Veuillez entrer votre mot de passe'); ok=false; }
+    if (!ok) return;
+    showToast('🔐 Connexion en cours…');
+    // Chercher l'utilisateur par téléphone dans profiles
+    const { data: profile, error: profileError } = await sb
+      .from('profiles')
+      .select('email')
+      .eq('telephone', phone)
+      .single();
+    if (profileError || !profile) {
+      setError('err-login-phone','Numéro introuvable. Vérifiez ou créez un compte.');
+      return;
+    }
+    const { error } = await sb.auth.signInWithPassword({ email: profile.email, password: pwd });
+    if (error) {
+      setError('err-login-pwd','Mot de passe incorrect.');
+      return;
+    }
+    showToast('✅ Connexion réussie !');
+    setTimeout(() => { window.location.href = 'topcash-app.html'; }, 900);
+  }
+
+  // ── REGISTER ──
+  // Stocker temporairement les données pendant l'OTP
+  let _pendingUser = null;
+
+  async function handleRegister() {
+    clearErrors('err-fname','err-lname','err-email','err-phone','err-pwd','err-pwd2','err-terms');
+    const fname = document.getElementById('reg-fname').value.trim();
+    const lname = document.getElementById('reg-lname').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const phone = document.getElementById('reg-phone').value.replace(/\D/g,'');
+    const pwd   = document.getElementById('reg-pwd').value;
+    const pwd2  = document.getElementById('reg-pwd2').value;
+    const terms = document.getElementById('reg-terms').checked;
+    let ok = true;
+
+    if (!fname) { setError('err-fname','Prénom requis'); ok=false; }
+    if (!lname) { setError('err-lname','Nom requis'); ok=false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('err-email','Adresse e-mail invalide'); ok=false; }
+    if (!phone) { setError('err-phone','Numéro requis'); ok=false; }
+    if (!pwd) { setError('err-pwd','Mot de passe requis'); ok=false; }
+    else if (!isValidPassword(pwd)) { setError('err-pwd','8 caractères minimum, avec au moins 1 chiffre et 1 caractère spécial (!@#$%...)'); ok=false; }
+    if (pwd && pwd !== pwd2) { setError('err-pwd2','Les mots de passe ne correspondent pas'); ok=false; }
+    if (!terms) { setError('err-terms','Vous devez obligatoirement accepter les CGU pour continuer'); ok=false; }
+    if (!ok) return;
+
+    showToast('⏳ Création du compte…');
+
+    // Vérifier si le téléphone existe déjà
+    const { data: existing } = await sb.from('profiles').select('id').eq('telephone', phone).single();
+    if (existing) { setError('err-phone','Ce numéro est déjà associé à un compte TopCash'); return; }
+
+    // Inscrire l'utilisateur dans Supabase Auth
+    const { data: authData, error: authError } = await sb.auth.signUp({ email, password: pwd });
+    if (authError) { setError('err-email', authError.message); return; }
+
+    // Créer le profil dans la table profiles
+    const userId = authData.user.id;
+    await sb.from('profiles').insert([{ id: userId, prenom: fname, nom: lname, email, telephone: phone, solde: 0 }]);
+
+    _pendingUser = { fname, email };
+    const raw = document.getElementById('reg-phone').value.trim();
+    document.getElementById('otp-phone-display').textContent = '+509 ' + raw;
+    startOtpTimer();
+    showToast('📲 Vérifiez votre email pour confirmer votre compte !');
+    goTo('otp');
+  }
+
+  // ── OTP (register) ──
+  function otpNext(inp, i) {
+    inp.value = inp.value.replace(/\D/,'');
+    inp.classList.toggle('filled', !!inp.value);
+    if (inp.value && i < 5) document.getElementById('otp-'+(i+1)).focus();
+    if (getOtpValue().length === 6) setTimeout(verifyOtp, 300);
+  }
+  function otpBack(e, i) {
+    if (e.key==='Backspace' && !e.target.value && i>0) document.getElementById('otp-'+(i-1)).focus();
+  }
+  function getOtpValue() {
+    return [0,1,2,3,4,5].map(i => document.getElementById('otp-'+i).value).join('');
+  }
+  function clearOtpInputs() {
+    [0,1,2,3,4,5].forEach(i => { const el=document.getElementById('otp-'+i); el.value=''; el.classList.remove('filled'); });
+  }
+  function verifyOtp() {
+    // Après inscription, on redirige directement vers l'app
+    // (la confirmation email se fait en arrière-plan)
+    showToast('✅ Compte créé avec succès !');
+    clearOtpInputs(); clearInterval(otpTimerInterval);
+    setTimeout(() => { window.location.href = 'topcash-app.html'; }, 900);
+  }
+
+  let otpTimerInterval;
+  function startOtpTimer() {
+    let sec = 120;
+    document.getElementById('otp-resend-btn').disabled = true;
+    clearInterval(otpTimerInterval);
+    otpTimerInterval = setInterval(() => {
+      sec--;
+      const m = String(Math.floor(sec/60)).padStart(2,'0');
+      const s = String(sec%60).padStart(2,'0');
+      document.getElementById('otp-countdown').textContent = m+':'+s;
+      if (sec <= 0) { clearInterval(otpTimerInterval); document.getElementById('otp-resend-btn').disabled=false; }
+    }, 1000);
+  }
+  function resendOtp() {
+    showToast('📲 Nouveau code envoyé sur WhatsApp');
+    startOtpTimer(); clearOtpInputs(); document.getElementById('otp-0').focus();
+  }
+
+  // ── FORGOT PASSWORD ──
+  function openForgotModal() {
+    showForgotStep(1);
+    document.getElementById('forgot-phone').value='';
+    clearErrors('err-forgot-phone','err-fotp','err-new-pwd','err-new-pwd2');
+    clearFotpInputs();
+    document.getElementById('modal-forgot').classList.add('open');
+  }
+  function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
+  function closeForgotOutside(e) { if(e.target.id==='modal-forgot') closeModal('forgot'); }
+  function showForgotStep(n) { [1,2,3].forEach(i => document.getElementById('forgot-step-'+i).classList.toggle('active',i===n)); }
+
+  function forgotSendOtp() {
+    setError('err-forgot-phone','');
+    const phone = document.getElementById('forgot-phone').value.trim();
+    if (!phone) { setError('err-forgot-phone','Veuillez entrer votre numéro de téléphone'); return; }
+    document.getElementById('forgot-phone-display').textContent = '+509 '+phone;
+    showToast('📲 Code OTP envoyé sur WhatsApp…');
+    setTimeout(() => showForgotStep(2), 500);
+  }
+
+  function fotpNext(inp, i) {
+    inp.value = inp.value.replace(/\D/,'');
+    inp.classList.toggle('filled', !!inp.value);
+    if (inp.value && i<5) document.getElementById('fotp-'+(i+1)).focus();
+  }
+  function fotpBack(e, i) { if(e.key==='Backspace'&&!e.target.value&&i>0) document.getElementById('fotp-'+(i-1)).focus(); }
+  function getFotpValue() { return [0,1,2,3,4,5].map(i=>document.getElementById('fotp-'+i).value).join(''); }
+  function clearFotpInputs() { [0,1,2,3,4,5].forEach(i=>{ const el=document.getElementById('fotp-'+i); if(el){el.value='';el.classList.remove('filled');} }); }
+
+  function forgotVerifyOtp() {
+    const code = getFotpValue();
+    setError('err-fotp','');
+    if (code.length<6) { setError('err-fotp','Entrez les 6 chiffres du code'); return; }
+    if (code==='123456') { showForgotStep(3); }
+    else { setError('err-fotp','Code incorrect. Réessayez.'); clearFotpInputs(); document.getElementById('fotp-0').focus(); }
+  }
+
+  function forgotReset() {
+    clearErrors('err-new-pwd','err-new-pwd2');
+    const pwd  = document.getElementById('new-pwd').value;
+    const pwd2 = document.getElementById('new-pwd2').value;
+    if (!isValidPassword(pwd)) { setError('err-new-pwd','8 caractères minimum, 1 chiffre et 1 caractère spécial requis'); return; }
+    if (pwd!==pwd2) { setError('err-new-pwd2','Les mots de passe ne correspondent pas'); return; }
+    closeModal('forgot');
+    showToast('✅ Mot de passe réinitialisé ! Connectez-vous.');
+    setTimeout(() => goTo('login'), 900);
+  }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+  }
+
+  // ── DESKTOP PHONE MIRROR ──
+  (function() {
+    const phoneScreen = document.getElementById('desktop-phone-screen');
+    if (!phoneScreen) return;
+
+    function isDesktop() { return window.innerWidth >= 900; }
+
+    function mirrorApp() {
+      if (!isDesktop()) return;
+      const appShell = document.querySelector('body > .app-shell');
+      if (!appShell || phoneScreen.querySelector('.app-shell')) return;
+
+      const clone = appShell.cloneNode(true);
+      clone.style.maxWidth = '100%';
+      clone.style.boxShadow = 'none';
+      clone.style.display = 'flex';
+
+      // Préfixer les ids pour éviter les conflits
+      clone.querySelectorAll('[id]').forEach(el => { el.id = 'cl-' + el.id; });
+
+      // Activer le splash dans le clone
+      clone.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const splash = clone.querySelector('#cl-screen-splash');
+      if (splash) splash.classList.add('active');
+
+      // Activer le scroll sur chaque écran du clone
+      clone.querySelectorAll('.screen').forEach(s => {
+        s.style.overflowY = 'auto';
+        s.style.webkitOverflowScrolling = 'touch';
+        s.style.minHeight = '100%';
+      });
+
+      phoneScreen.appendChild(clone);
+
+      // ── Naviguer dans le clone ──
+      function cloneGoTo(id) {
+        clone.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = clone.querySelector('#cl-screen-' + id);
+        if (target) { target.classList.add('active'); target.scrollTop = 0; }
+      }
+
+      // ── Rebrancher TOUS les éléments interactifs du clone ──
+      clone.querySelectorAll('[onclick]').forEach(el => {
+        const original = el.getAttribute('onclick');
+        el.removeAttribute('onclick');
+        el.addEventListener('click', function(e) {
+          // goTo('xxx') → navigation dans le clone
+          const navMatch = original.match(/goTo\(['"](\w+)['"]\)/);
+          if (navMatch) { e.preventDefault(); cloneGoTo(navMatch[1]); return; }
+
+          // togglePwd('id', btn)
+          const pwdMatch = original.match(/togglePwd\(['"]([^'"]+)['"]/);
+          if (pwdMatch) {
+            const fieldId = 'cl-' + pwdMatch[1];
+            const field = clone.querySelector('#' + fieldId);
+            if (field) {
+              field.type = field.type === 'password' ? 'text' : 'password';
+              el.textContent = field.type === 'password' ? '👁' : '🙈';
+            }
+            return;
+          }
+
+          // openForgotModal → modal reste dans le doc principal
+          if (original.includes('openForgotModal')) { openForgotModal(); return; }
+
+          // handleLogin / handleRegister → valider dans le clone
+          if (original.includes('handleLogin')) { cloneHandleLogin(); return; }
+          if (original.includes('handleRegister')) { cloneHandleRegister(); return; }
+
+          // Autres (showToast, resendOtp, forgotVerifyOtp, etc.) → appel global
+          try { eval(original); } catch(err) { /* ignoré */ }
+        });
+      });
+
+      // ── Formulaires dans le clone : login simplifié ──
+      function cloneHandleLogin() {
+        const phone = clone.querySelector('#cl-login-phone');
+        const pwd   = clone.querySelector('#cl-login-pwd');
+        if (!phone || !phone.value.trim()) { showToast('⚠️ Veuillez entrer votre numéro'); return; }
+        if (!pwd   || !pwd.value)           { showToast('⚠️ Veuillez entrer votre mot de passe'); return; }
+        showToast('🔐 Connexion en cours…');
+        setTimeout(() => cloneGoTo('success'), 1300);
+      }
+
+      function cloneHandleRegister() {
+        const fname = clone.querySelector('#cl-reg-fname');
+        const lname = clone.querySelector('#cl-reg-lname');
+        if (!fname || !fname.value.trim()) { showToast('⚠️ Prénom requis'); return; }
+        if (!lname || !lname.value.trim()) { showToast('⚠️ Nom requis'); return; }
+        showToast('📲 Code OTP envoyé sur WhatsApp…');
+        setTimeout(() => cloneGoTo('otp'), 800);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mirrorApp);
+    } else {
+      mirrorApp();
+    }
+  })();
+</script>
+</body>
+</html>
