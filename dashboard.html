@@ -1619,7 +1619,7 @@
     const { data: { user } } = await sb.auth.getUser();
     if (!user) {
       // Pas connecté → retour à la page de connexion
-      window.location.href = 'topcash_landing.html';
+      window.location.href = 'index.html';
       return;
     }
     const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
@@ -1672,7 +1672,7 @@
   // ── DÉCONNEXION ──
   async function deconnexion() {
     await sb.auth.signOut();
-    window.location.href = 'topcash_landing.html';
+    window.location.href = 'index.html';
   }
 
   // Charger au démarrage

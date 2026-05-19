@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Connexion...</title></head>
+<body style="font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;background:#f5f7ff;">
+<div>Connexion en cours...</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://zxsazjyzrnusthqcdztr.supabase.co',
+  'sb_publishable_48TO0VYxHm9Vtm9rUsIR8A_SYtDzYWf'
+);
+
+async function handleAuthCallback() {
+  try {
+    const hash = window.location.hash;
+
+    if (hash && hash.includes('access_token')) {
+      const params = new URLSearchParams(hash.substring(1));
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+
+      if (access_token && refresh_token) {
+        await sb.auth.setSession({ access_token, refresh_token });
+      }
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+
+    if (session) {
+      window.location.replace('/dashboard.html');
+    } else {
+      window.location.replace('/index.html');
+    }
+  } catch (e) {
+    window.location.replace('/index.html');
+  }
+}
+
+handleAuthCallback();
+</script>
+</body>
+</html>

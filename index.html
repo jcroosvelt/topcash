@@ -952,7 +952,7 @@
       return;
     }
     showToast('✅ Connexion réussie !');
-    setTimeout(() => { window.location.href = 'topcash-app.html'; }, 900);
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
   }
 
   // ── REGISTER ──
@@ -1023,7 +1023,7 @@
     // (la confirmation email se fait en arrière-plan)
     showToast('✅ Compte créé avec succès !');
     clearOtpInputs(); clearInterval(otpTimerInterval);
-    setTimeout(() => { window.location.href = 'topcash-app.html'; }, 900);
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
   }
 
   let otpTimerInterval;
