@@ -97,7 +97,45 @@
   .btn-blue:hover { transform:translateY(-1px); }
   .btn-blue:active { transform:scale(.98); }
 
-  /* ── AUTH COMMON ── */
+  /* ── LOADING OVERLAY ── */
+  .loading-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(15, 27, 61, 0.65);
+    backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+  }
+  .loading-overlay.show { display: flex; animation: fadeIn .25s ease; }
+  .loader-logo-wrap {
+    position: relative;
+    width: 90px; height: 90px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loader-logo {
+    width: 64px; height: 64px; object-fit: contain;
+    animation: logoPulse 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(247,168,0,.7));
+    border-radius: 16px;
+  }
+  .loader-ring {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(247,168,0,.2);
+    border-top-color: var(--gold);
+    animation: spin .9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes logoPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%       { transform: scale(.88); opacity: .75; }
+  }
+  .loader-text {
+    color: #fff; font-size: 13px; font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: .4px; opacity: .85;
+  }
+
+
   .auth-header { background:#ffffff;padding:52px 24px 30px;border-radius:0 0 32px 32px;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(26,63,170,.08); }
   .auth-header::before { content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(26,63,170,.05); }
   .auth-header::after { content:'';position:absolute;bottom:-60px;left:-30px;width:160px;height:160px;border-radius:50%;background:rgba(247,168,0,.06); }
@@ -699,14 +737,14 @@
   </div>
 
 
-  <!-- ════════ SCREEN 4 — VÉRIFICATION OTP ════════ -->
+  <!-- ════════ SCREEN 4 — CONFIRMATION EMAIL ════════ -->
   <div class="screen" id="screen-otp">
     <div class="auth-header">
       <button class="auth-back" onclick="goTo('register')">←</button>
       <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
            alt="TopCash" class="auth-header-logo" style="height:36px;object-fit:contain;">
-      <h2>Vérification email</h2>
-      <p>Étape 2 sur 2 — Confirmez votre adresse email</p>
+      <h2>Vérifiez votre email</h2>
+      <p>Dernière étape — Confirmez votre adresse</p>
       <div class="steps-bar">
         <div class="step-seg done"></div>
         <div class="step-seg active"></div>
@@ -714,35 +752,29 @@
     </div>
 
     <div class="otp-body">
-      <div class="otp-icon">✉️</div>
-      <div class="otp-title">Vérifiez votre email</div>
+      <div class="otp-icon">📧</div>
+      <div class="otp-title">Un email vous a été envoyé</div>
       <div class="otp-sub">
-        Un code à 6 chiffres a été envoyé à<br>
+        Nous avons envoyé un lien de confirmation à<br>
         <strong id="otp-email-display">votre adresse email</strong>
       </div>
-      <div class="whatsapp-badge" style="background:#e8f0fe;border-color:#a8c5f7;color:#1a56db;">
-        <span style="font-size:20px">📧</span>
-        Vérifiez votre boîte mail et entrez le code ci-dessous
-      </div>
-      <div class="otp-inputs">
-        <input class="otp-input" type="text" maxlength="1" id="otp-0" oninput="otpNext(this,0)" onkeydown="otpBack(event,0)">
-        <input class="otp-input" type="text" maxlength="1" id="otp-1" oninput="otpNext(this,1)" onkeydown="otpBack(event,1)">
-        <input class="otp-input" type="text" maxlength="1" id="otp-2" oninput="otpNext(this,2)" onkeydown="otpBack(event,2)">
-        <input class="otp-input" type="text" maxlength="1" id="otp-3" oninput="otpNext(this,3)" onkeydown="otpBack(event,3)">
-        <input class="otp-input" type="text" maxlength="1" id="otp-4" oninput="otpNext(this,4)" onkeydown="otpBack(event,4)">
-        <input class="otp-input" type="text" maxlength="1" id="otp-5" oninput="otpNext(this,5)" onkeydown="otpBack(event,5)">
-      </div>
-      <div class="field-error" id="err-otp" style="text-align:center;margin-bottom:4px"></div>
 
-      <div class="otp-timer">
-        Code valide pendant <span id="otp-countdown">02:00</span>
+      <div class="whatsapp-badge" style="background:#e8f0fe;border-color:#a8c5f7;color:#1a56db;flex-direction:column;gap:10px;text-align:center;padding:20px 16px">
+        <span style="font-size:36px">📬</span>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px">Ouvrez votre boîte mail</div>
+          <div style="font-size:12px;opacity:.8">Cliquez sur le lien dans l'email pour activer votre compte. Vérifiez aussi votre dossier spam.</div>
+        </div>
       </div>
 
-      <button class="btn-blue" style="width:100%" onclick="verifyOtp()">Vérifier mon compte ✓</button>
-      <button class="otp-resend" id="otp-resend-btn" disabled onclick="resendOtp()">Renvoyer le code</button>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        <button class="btn-blue" style="width:100%" onclick="goTo('login')">J'ai confirmé mon email →</button>
+        <button class="otp-resend" id="otp-resend-btn" onclick="resendConfirmation()" style="margin-top:0">Renvoyer l'email</button>
+      </div>
 
-      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:16px">
-        Vérifiez également votre dossier spam si vous ne le trouvez pas.
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:20px;line-height:1.6">
+        Le lien est valable <strong>24 heures</strong>.<br>
+        Sans confirmation, votre compte ne sera pas activé.
       </p>
     </div>
   </div>
@@ -855,6 +887,16 @@
   </div>
 </div>
 
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loader-logo-wrap">
+    <div class="loader-ring"></div>
+    <img class="loader-logo"
+         src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
+         alt="TopCash">
+  </div>
+  <div class="loader-text" id="loading-text">Chargement…</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -872,6 +914,15 @@
     screens.forEach(s => document.getElementById('screen-' + s).classList.remove('active'));
     document.getElementById('screen-' + id).classList.add('active');
     window.scrollTo(0, 0);
+  }
+
+  // ── LOADER ──
+  function showLoader(msg) {
+    document.getElementById('loading-text').textContent = msg || 'Chargement…';
+    document.getElementById('loading-overlay').classList.add('show');
+  }
+  function hideLoader() {
+    document.getElementById('loading-overlay').classList.remove('show');
   }
 
   // ── PASSWORD TOGGLE ──
@@ -929,8 +980,8 @@
     if (!ok) return;
 
     const loginBtn = document.querySelector('#screen-login .btn-blue');
-    if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'Connexion en cours…'; }
-    showToast('🔐 Connexion en cours…');
+    if (loginBtn) { loginBtn.disabled = true; }
+    showLoader('Connexion en cours…');
 
     try {
       // Chercher l'utilisateur par téléphone dans profiles
@@ -988,13 +1039,6 @@
     showToast('⏳ Vérification des informations…');
 
     try {
-      // Vérifier si le téléphone existe déjà
-      const { data: existingPhone } = await sb.from('profiles').select('id').eq('telephone', phone).maybeSingle();
-      if (existingPhone) {
-        setError('err-phone','Ce numéro est déjà associé à un compte TopCash');
-        return;
-      }
-
       // Vérifier si l'email existe déjà
       const { data: existingEmail } = await sb.from('profiles').select('id').eq('email', email).maybeSingle();
       if (existingEmail) {
@@ -1002,34 +1046,48 @@
         return;
       }
 
-      // Inscrire via Supabase Auth — Supabase envoie le code OTP par email via le SMTP configuré
-      // shouldCreateUser: true, emailRedirectTo absent → Supabase envoie un OTP à 6 chiffres
+      // Inscrire via Supabase Auth — envoie un lien de confirmation par email
       const { data: authData, error: authError } = await sb.auth.signUp({
         email,
         password: pwd,
         options: {
-          data: { prenom: fname, nom: lname, telephone: phone }
+          data: { prenom: fname, nom: lname, telephone: phone },
+          emailRedirectTo: window.location.origin + '/dashboard.html'
         }
       });
 
       if (authError) {
-        if (authError.message.includes('already registered')) {
+        let msg = 'Erreur lors de l\'inscription. Réessayez.';
+        try {
+          const parsed = typeof authError.message === 'string' ? JSON.parse(authError.message) : authError.message;
+          if (parsed?.msg) msg = parsed.msg;
+          else if (parsed?.message) msg = parsed.message;
+        } catch { msg = authError.message || msg; }
+
+        if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('registered')) {
           setError('err-email','Cette adresse email est déjà enregistrée.');
         } else {
-          setError('err-email', authError.message);
+          setError('err-email', msg);
         }
         return;
       }
 
-      // Stocker les données en attente — le profil sera créé après confirmation OTP
-      _pendingUser = { fname, lname, email, phone, pwd, userId: authData.user?.id };
+      // Créer le profil immédiatement
+      const userId = authData.user?.id;
+      if (userId) {
+        await sb.from('profiles').insert([{
+          id: userId, prenom: fname, nom: lname,
+          email, telephone: phone, solde: 0
+        }]);
+      }
 
-      // Afficher l'email masqué dans l'écran OTP
+      // Stocker l'email pour l'afficher sur l'écran suivant
+      _pendingUser = { email };
+
       const maskedEmail = email.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + '*'.repeat(Math.max(2, b.length)) + c);
       document.getElementById('otp-email-display').textContent = maskedEmail;
 
-      startOtpTimer();
-      showToast('📧 Code envoyé à votre adresse email !');
+      showToast('📧 Email de confirmation envoyé !');
       goTo('otp');
 
     } finally {
@@ -1037,104 +1095,27 @@
     }
   }
 
-  // ── OTP (register) — vérification réelle via Supabase ──
-  function otpNext(inp, i) {
-    inp.value = inp.value.replace(/\D/,'');
-    inp.classList.toggle('filled', !!inp.value);
-    if (inp.value && i < 5) document.getElementById('otp-'+(i+1)).focus();
-    if (getOtpValue().length === 6) setTimeout(verifyOtp, 300);
-  }
-  function otpBack(e, i) {
-    if (e.key==='Backspace' && !e.target.value && i>0) document.getElementById('otp-'+(i-1)).focus();
-  }
-  function getOtpValue() {
-    return [0,1,2,3,4,5].map(i => document.getElementById('otp-'+i).value).join('');
-  }
-  function clearOtpInputs() {
-    [0,1,2,3,4,5].forEach(i => { const el=document.getElementById('otp-'+i); el.value=''; el.classList.remove('filled'); });
-  }
-
-  async function verifyOtp() {
-    const code = getOtpValue();
-    if (code.length < 6) { setError('err-otp','Entrez les 6 chiffres du code'); return; }
-    if (!_pendingUser) { setError('err-otp','Session expirée. Recommencez l\'inscription.'); return; }
-
-    const verifyBtn = document.querySelector('#screen-otp .btn-blue');
-    if (verifyBtn) { verifyBtn.disabled = true; verifyBtn.textContent = 'Vérification…'; }
-    setError('err-otp','');
-
-    try {
-      // Vérifier le code OTP avec Supabase
-      const { data: verifyData, error: verifyError } = await sb.auth.verifyOtp({
-        email: _pendingUser.email,
-        token: code,
-        type: 'signup'
-      });
-
-      if (verifyError) {
-        setError('err-otp','Code incorrect ou expiré. Réessayez.');
-        clearOtpInputs();
-        document.getElementById('otp-0').focus();
-        return;
-      }
-
-      // OTP valide → créer le profil en base maintenant
-      const userId = verifyData.user?.id || _pendingUser.userId;
-      if (userId) {
-        const { error: insertError } = await sb.from('profiles').insert([{
-          id: userId,
-          prenom: _pendingUser.fname,
-          nom: _pendingUser.lname,
-          email: _pendingUser.email,
-          telephone: _pendingUser.phone,
-          solde: 0
-        }]);
-        if (insertError && !insertError.message.includes('duplicate')) {
-          console.error('Erreur profil:', insertError.message);
-        }
-      }
-
-      clearOtpInputs();
-      clearInterval(otpTimerInterval);
-      _pendingUser = null;
-
-      showToast('✅ Compte créé et vérifié avec succès !');
-      // Afficher l'écran success avant de rediriger
-      goTo('success');
-
-    } finally {
-      if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.textContent = 'Vérifier mon compte ✓'; }
-    }
-  }
-
-  let otpTimerInterval;
-  function startOtpTimer() {
-    let sec = 120;
-    document.getElementById('otp-resend-btn').disabled = true;
-    clearInterval(otpTimerInterval);
-    otpTimerInterval = setInterval(() => {
-      sec--;
-      const m = String(Math.floor(sec/60)).padStart(2,'0');
-      const s = String(sec%60).padStart(2,'0');
-      document.getElementById('otp-countdown').textContent = m+':'+s;
-      if (sec <= 0) { clearInterval(otpTimerInterval); document.getElementById('otp-resend-btn').disabled=false; }
-    }, 1000);
-  }
-
-  async function resendOtp() {
-    if (!_pendingUser) return;
-    const resendBtn = document.getElementById('otp-resend-btn');
-    if (resendBtn) { resendBtn.disabled = true; }
+  // ── CONFIRMATION EMAIL (register) ──
+  async function resendConfirmation() {
+    if (!_pendingUser?.email) return;
+    const btn = document.getElementById('otp-resend-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
 
     const { error } = await sb.auth.resend({ type: 'signup', email: _pendingUser.email });
     if (error) {
-      showToast('❌ Erreur lors du renvoi. Réessayez.');
-      if (resendBtn) { resendBtn.disabled = false; }
+      showToast('❌ Erreur lors du renvoi. Réessayez dans quelques minutes.');
     } else {
-      showToast('📧 Nouveau code envoyé à votre email');
-      startOtpTimer();
-      clearOtpInputs();
-      document.getElementById('otp-0').focus();
+      showToast('📧 Email renvoyé avec succès !');
+      // Bloquer le bouton 60 secondes pour éviter le spam
+      let sec = 60;
+      const interval = setInterval(() => {
+        sec--;
+        if (btn) btn.textContent = `Renvoyer (${sec}s)`;
+        if (sec <= 0) {
+          clearInterval(interval);
+          if (btn) { btn.disabled = false; btn.textContent = 'Renvoyer l\'email'; }
+        }
+      }, 1000);
     }
   }
 
@@ -1323,7 +1304,7 @@
           // handleLogin / handleRegister → simulation visuelle dans le clone
           if (original.includes('handleLogin')) { cloneHandleLogin(); return; }
           if (original.includes('handleRegister')) { cloneHandleRegister(); return; }
-          if (original.includes('verifyOtp')) { cloneVerifyOtp(); return; }
+          if (original.includes('resendConfirmation')) { showToast('📧 Email renvoyé !'); return; }
 
           // Tout le reste : ignorer silencieusement (pas d'eval)
         });
@@ -1355,10 +1336,6 @@
         setTimeout(() => cloneGoTo('otp'), 800);
       }
 
-      function cloneVerifyOtp() {
-        showToast('✅ Compte vérifié avec succès !');
-        setTimeout(() => cloneGoTo('success'), 900);
-      }
     }
 
     if (document.readyState === 'loading') {
