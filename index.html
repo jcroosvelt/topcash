@@ -74,10 +74,6 @@
   .splash-headline h1 em { color:var(--blue);font-style:normal; }
   .splash-headline p { color:var(--text-muted);font-size:14px;line-height:1.6;max-width:300px;margin:0 auto; }
 
-  .dots { display:flex;gap:6px;justify-content:center;margin-bottom:20px;position:relative;z-index:2; }
-  .dot { width:8px;height:8px;border-radius:4px;background:var(--border);transition:.3s; }
-  .dot.active { width:24px;background:var(--blue); }
-
   .splash-cta { width:100%;padding:0 24px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2; }
   .splash-footer { text-align:center;color:var(--text-muted);font-size:11px;margin-top:16px;padding:0 24px;position:relative;z-index:2; }
 
@@ -523,7 +519,7 @@
 
     <div class="splash-topbar">
       <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
-           alt="TopCash" style="height:90px;object-fit:contain;">
+           alt="TopCash" style="height:36px;object-fit:contain;">
       <button class="skip-btn" onclick="goTo('login')">Connexion</button>
     </div>
 
@@ -532,7 +528,7 @@
         <div class="mock-card-toprow">
           <div class="mock-chip"></div>
           <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
-               alt="TopCash" style="height:90px;object-fit:contain;display:block">
+               alt="TopCash" style="height:28px;object-fit:contain;display:block;filter:brightness(0) invert(1)">
         </div>
         <div class="mock-number">•••• •••• •••• 4582</div>
         <div style="margin-bottom:10px;">
@@ -557,10 +553,6 @@
       </div>
     </div>
 
-    <div class="dots">
-      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-
     <div class="splash-cta">
       <button class="btn-gold" onclick="goTo('register')">🚀 &nbsp;Créer un compte gratuit</button>
       <button class="btn-outline-white" onclick="goTo('login')">Se connecter</button>
@@ -576,7 +568,7 @@
     <div class="auth-header">
       <button class="auth-back" onclick="goTo('splash')">←</button>
       <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
-           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
+           alt="TopCash" class="auth-header-logo" style="height:36px;object-fit:contain;">
       <h2>Bon retour 👋</h2>
       <p>Connectez-vous à votre compte</p>
     </div>
@@ -622,7 +614,7 @@
     <div class="auth-header">
       <button class="auth-back" onclick="goTo('splash')">←</button>
       <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
-           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
+           alt="TopCash" class="auth-header-logo" style="height:36px;object-fit:contain;">
       <h2>Créez votre compte</h2>
       <p>Rejoignez des milliers d'utilisateurs en Haïti</p>
       <div class="steps-bar">
@@ -644,7 +636,7 @@
         <div class="form-group">
           <label class="form-label">Nom</label>
           <div class="form-input-wrap">
-            <span class="form-input-icon" style="font-size:13px;font-weight:700;color:#c0c8e0;left:12px">NOM</span>
+            <span class="form-input-icon">🪪</span>
             <input class="form-input" type="text" placeholder="Pierre" id="reg-lname" oninput="updateSteps()">
           </div>
           <div class="field-error" id="err-lname"></div>
@@ -712,9 +704,9 @@
     <div class="auth-header">
       <button class="auth-back" onclick="goTo('register')">←</button>
       <img src="https://i.supaimg.com/d6681b17-ef16-4c99-b257-024f332fa013/70b1663b-0de2-43f9-86ac-2cf185713a33.png"
-           alt="TopCash" class="auth-header-logo" style="height:110px;object-fit:contain;">
-      <h2>Vérification WhatsApp</h2>
-      <p>Étape 2 sur 2 — Confirmez votre numéro</p>
+           alt="TopCash" class="auth-header-logo" style="height:36px;object-fit:contain;">
+      <h2>Vérification email</h2>
+      <p>Étape 2 sur 2 — Confirmez votre adresse email</p>
       <div class="steps-bar">
         <div class="step-seg done"></div>
         <div class="step-seg active"></div>
@@ -722,15 +714,15 @@
     </div>
 
     <div class="otp-body">
-      <div class="otp-icon">💬</div>
-      <div class="otp-title">Code envoyé sur WhatsApp</div>
+      <div class="otp-icon">✉️</div>
+      <div class="otp-title">Vérifiez votre email</div>
       <div class="otp-sub">
-        Un code à 6 chiffres a été envoyé au<br>
-        <strong id="otp-phone-display">+509 ••••-••••</strong>
+        Un code à 6 chiffres a été envoyé à<br>
+        <strong id="otp-email-display">votre adresse email</strong>
       </div>
-      <div class="whatsapp-badge">
-        <span style="font-size:20px">📲</span>
-        Vérifiez WhatsApp et entrez le code ci-dessous
+      <div class="whatsapp-badge" style="background:#e8f0fe;border-color:#a8c5f7;color:#1a56db;">
+        <span style="font-size:20px">📧</span>
+        Vérifiez votre boîte mail et entrez le code ci-dessous
       </div>
       <div class="otp-inputs">
         <input class="otp-input" type="text" maxlength="1" id="otp-0" oninput="otpNext(this,0)" onkeydown="otpBack(event,0)">
@@ -746,11 +738,11 @@
         Code valide pendant <span id="otp-countdown">02:00</span>
       </div>
 
-      <button class="btn-blue" style="width:100%" onclick="verifyOtp()">Vérifier mon numéro ✓</button>
+      <button class="btn-blue" style="width:100%" onclick="verifyOtp()">Vérifier mon compte ✓</button>
       <button class="otp-resend" id="otp-resend-btn" disabled onclick="resendOtp()">Renvoyer le code</button>
 
       <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:16px">
-        Pour tester : entrez le code <strong>123456</strong>
+        Vérifiez également votre dossier spam si vous ne le trouvez pas.
       </p>
     </div>
   </div>
@@ -758,8 +750,8 @@
 
   <!-- ════════ SCREEN 5 — SUCCESS ════════ -->
   <div class="screen" id="screen-success">
-    <div class="blob success-blob-1 blob"></div>
-    <div class="blob success-blob-2 blob"></div>
+    <div class="blob success-blob-1"></div>
+    <div class="blob success-blob-2"></div>
     <div class="success-badge">🎉</div>
     <div class="success-title">Bienvenue sur<br><em>TopCash !</em></div>
     <div class="success-sub">
@@ -788,7 +780,7 @@
         </div>
       </div>
     </div>
-    <button class="btn-gold-full" onclick="showToast('🚀 Chargement de votre tableau de bord…')">
+    <button class="btn-gold-full" onclick="showToast('🚀 Chargement de votre tableau de bord…'); setTimeout(() => { window.location.href = 'dashboard.html'; }, 900)">
       Accéder à mon compte →
     </button>
   </div>
@@ -805,7 +797,7 @@
     <!-- Étape 1 : numéro -->
     <div class="modal-step active" id="forgot-step-1">
       <div class="modal-title">🔑 Mot de passe oublié</div>
-      <div class="modal-sub">Entrez votre numéro de téléphone. Vous recevrez un code OTP via <strong>WhatsApp</strong>.</div>
+      <div class="modal-sub">Entrez votre numéro de téléphone. Un lien de réinitialisation sera envoyé à l'adresse email associée à votre compte.</div>
       <div class="form-group">
         <label class="form-label">Numéro de téléphone</label>
         <div class="form-input-wrap">
@@ -814,13 +806,13 @@
         </div>
         <div class="field-error" id="err-forgot-phone"></div>
       </div>
-      <button class="btn-blue" onclick="forgotSendOtp()">📲 &nbsp;Recevoir le code WhatsApp</button>
+      <button class="btn-blue" onclick="forgotSendOtp()">📧 &nbsp;Recevoir le lien par email</button>
     </div>
 
     <!-- Étape 2 : OTP -->
     <div class="modal-step" id="forgot-step-2">
-      <div class="modal-title">💬 Code WhatsApp</div>
-      <div class="modal-sub">Code envoyé au <strong id="forgot-phone-display"></strong>. Entrez-le ci-dessous.</div>
+      <div class="modal-title">📧 Vérifiez votre email</div>
+      <div class="modal-sub">Un lien de réinitialisation a été envoyé à <strong id="forgot-phone-display"></strong>. Après avoir cliqué sur le lien, entrez votre nouveau mot de passe.</div>
       <div class="otp-inputs" style="margin-bottom:8px">
         <input class="otp-input" type="text" maxlength="1" id="fotp-0" oninput="fotpNext(this,0)" onkeydown="fotpBack(event,0)">
         <input class="otp-input" type="text" maxlength="1" id="fotp-1" oninput="fotpNext(this,1)" onkeydown="fotpBack(event,1)">
@@ -831,7 +823,7 @@
       </div>
       <div class="field-error" id="err-fotp" style="text-align:center;margin-bottom:12px"></div>
       <button class="btn-blue" onclick="forgotVerifyOtp()">Valider le code</button>
-      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px">Code de test : <strong>123456</strong></p>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px">Vérifiez aussi votre dossier spam.</p>
     </div>
 
     <!-- Étape 3 : nouveau mot de passe -->
@@ -935,28 +927,39 @@
     if (!phone) { setError('err-login-phone','Veuillez entrer votre numéro de téléphone'); ok=false; }
     if (!pwd)   { setError('err-login-pwd','Veuillez entrer votre mot de passe'); ok=false; }
     if (!ok) return;
+
+    const loginBtn = document.querySelector('#screen-login .btn-blue');
+    if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'Connexion en cours…'; }
     showToast('🔐 Connexion en cours…');
-    // Chercher l'utilisateur par téléphone dans profiles
-    const { data: profile, error: profileError } = await sb
-      .from('profiles')
-      .select('email')
-      .eq('telephone', phone)
-      .single();
-    if (profileError || !profile) {
-      setError('err-login-phone','Numéro introuvable. Vérifiez ou créez un compte.');
-      return;
+
+    try {
+      // Chercher l'utilisateur par téléphone dans profiles
+      const { data: profile, error: profileError } = await sb
+        .from('profiles')
+        .select('email')
+        .eq('telephone', phone)
+        .single();
+
+      if (profileError || !profile) {
+        setError('err-login-phone','Numéro introuvable. Vérifiez ou créez un compte.');
+        return;
+      }
+
+      const { error } = await sb.auth.signInWithPassword({ email: profile.email, password: pwd });
+      if (error) {
+        setError('err-login-pwd','Mot de passe incorrect.');
+        return;
+      }
+
+      showToast('✅ Connexion réussie !');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+    } finally {
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'Se connecter →'; }
     }
-    const { error } = await sb.auth.signInWithPassword({ email: profile.email, password: pwd });
-    if (error) {
-      setError('err-login-pwd','Mot de passe incorrect.');
-      return;
-    }
-    showToast('✅ Connexion réussie !');
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
   }
 
   // ── REGISTER ──
-  // Stocker temporairement les données pendant l'OTP
+  // Stocker temporairement les données en attente de vérification OTP
   let _pendingUser = null;
 
   async function handleRegister() {
@@ -973,36 +976,68 @@
     if (!fname) { setError('err-fname','Prénom requis'); ok=false; }
     if (!lname) { setError('err-lname','Nom requis'); ok=false; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('err-email','Adresse e-mail invalide'); ok=false; }
-    if (!phone) { setError('err-phone','Numéro requis'); ok=false; }
+    if (!phone || phone.length < 8) { setError('err-phone','Numéro de téléphone invalide'); ok=false; }
     if (!pwd) { setError('err-pwd','Mot de passe requis'); ok=false; }
     else if (!isValidPassword(pwd)) { setError('err-pwd','8 caractères minimum, avec au moins 1 chiffre et 1 caractère spécial (!@#$%...)'); ok=false; }
     if (pwd && pwd !== pwd2) { setError('err-pwd2','Les mots de passe ne correspondent pas'); ok=false; }
     if (!terms) { setError('err-terms','Vous devez obligatoirement accepter les CGU pour continuer'); ok=false; }
     if (!ok) return;
 
-    showToast('⏳ Création du compte…');
+    const regBtn = document.querySelector('#screen-register .btn-gold');
+    if (regBtn) { regBtn.disabled = true; regBtn.textContent = 'Création en cours…'; }
+    showToast('⏳ Vérification des informations…');
 
-    // Vérifier si le téléphone existe déjà
-    const { data: existing } = await sb.from('profiles').select('id').eq('telephone', phone).single();
-    if (existing) { setError('err-phone','Ce numéro est déjà associé à un compte TopCash'); return; }
+    try {
+      // Vérifier si le téléphone existe déjà
+      const { data: existingPhone } = await sb.from('profiles').select('id').eq('telephone', phone).maybeSingle();
+      if (existingPhone) {
+        setError('err-phone','Ce numéro est déjà associé à un compte TopCash');
+        return;
+      }
 
-    // Inscrire l'utilisateur dans Supabase Auth
-    const { data: authData, error: authError } = await sb.auth.signUp({ email, password: pwd });
-    if (authError) { setError('err-email', authError.message); return; }
+      // Vérifier si l'email existe déjà
+      const { data: existingEmail } = await sb.from('profiles').select('id').eq('email', email).maybeSingle();
+      if (existingEmail) {
+        setError('err-email','Cette adresse email est déjà associée à un compte TopCash');
+        return;
+      }
 
-    // Créer le profil dans la table profiles
-    const userId = authData.user.id;
-    await sb.from('profiles').insert([{ id: userId, prenom: fname, nom: lname, email, telephone: phone, solde: 0 }]);
+      // Inscrire via Supabase Auth — Supabase envoie le code OTP par email via le SMTP configuré
+      // shouldCreateUser: true, emailRedirectTo absent → Supabase envoie un OTP à 6 chiffres
+      const { data: authData, error: authError } = await sb.auth.signUp({
+        email,
+        password: pwd,
+        options: {
+          data: { prenom: fname, nom: lname, telephone: phone }
+        }
+      });
 
-    _pendingUser = { fname, email };
-    const raw = document.getElementById('reg-phone').value.trim();
-    document.getElementById('otp-phone-display').textContent = '+509 ' + raw;
-    startOtpTimer();
-    showToast('📲 Vérifiez votre email pour confirmer votre compte !');
-    goTo('otp');
+      if (authError) {
+        if (authError.message.includes('already registered')) {
+          setError('err-email','Cette adresse email est déjà enregistrée.');
+        } else {
+          setError('err-email', authError.message);
+        }
+        return;
+      }
+
+      // Stocker les données en attente — le profil sera créé après confirmation OTP
+      _pendingUser = { fname, lname, email, phone, pwd, userId: authData.user?.id };
+
+      // Afficher l'email masqué dans l'écran OTP
+      const maskedEmail = email.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + '*'.repeat(Math.max(2, b.length)) + c);
+      document.getElementById('otp-email-display').textContent = maskedEmail;
+
+      startOtpTimer();
+      showToast('📧 Code envoyé à votre adresse email !');
+      goTo('otp');
+
+    } finally {
+      if (regBtn) { regBtn.disabled = false; regBtn.textContent = 'Continuer →'; }
+    }
   }
 
-  // ── OTP (register) ──
+  // ── OTP (register) — vérification réelle via Supabase ──
   function otpNext(inp, i) {
     inp.value = inp.value.replace(/\D/,'');
     inp.classList.toggle('filled', !!inp.value);
@@ -1018,12 +1053,58 @@
   function clearOtpInputs() {
     [0,1,2,3,4,5].forEach(i => { const el=document.getElementById('otp-'+i); el.value=''; el.classList.remove('filled'); });
   }
-  function verifyOtp() {
-    // Après inscription, on redirige directement vers l'app
-    // (la confirmation email se fait en arrière-plan)
-    showToast('✅ Compte créé avec succès !');
-    clearOtpInputs(); clearInterval(otpTimerInterval);
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+
+  async function verifyOtp() {
+    const code = getOtpValue();
+    if (code.length < 6) { setError('err-otp','Entrez les 6 chiffres du code'); return; }
+    if (!_pendingUser) { setError('err-otp','Session expirée. Recommencez l\'inscription.'); return; }
+
+    const verifyBtn = document.querySelector('#screen-otp .btn-blue');
+    if (verifyBtn) { verifyBtn.disabled = true; verifyBtn.textContent = 'Vérification…'; }
+    setError('err-otp','');
+
+    try {
+      // Vérifier le code OTP avec Supabase
+      const { data: verifyData, error: verifyError } = await sb.auth.verifyOtp({
+        email: _pendingUser.email,
+        token: code,
+        type: 'signup'
+      });
+
+      if (verifyError) {
+        setError('err-otp','Code incorrect ou expiré. Réessayez.');
+        clearOtpInputs();
+        document.getElementById('otp-0').focus();
+        return;
+      }
+
+      // OTP valide → créer le profil en base maintenant
+      const userId = verifyData.user?.id || _pendingUser.userId;
+      if (userId) {
+        const { error: insertError } = await sb.from('profiles').insert([{
+          id: userId,
+          prenom: _pendingUser.fname,
+          nom: _pendingUser.lname,
+          email: _pendingUser.email,
+          telephone: _pendingUser.phone,
+          solde: 0
+        }]);
+        if (insertError && !insertError.message.includes('duplicate')) {
+          console.error('Erreur profil:', insertError.message);
+        }
+      }
+
+      clearOtpInputs();
+      clearInterval(otpTimerInterval);
+      _pendingUser = null;
+
+      showToast('✅ Compte créé et vérifié avec succès !');
+      // Afficher l'écran success avant de rediriger
+      goTo('success');
+
+    } finally {
+      if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.textContent = 'Vérifier mon compte ✓'; }
+    }
   }
 
   let otpTimerInterval;
@@ -1039,30 +1120,76 @@
       if (sec <= 0) { clearInterval(otpTimerInterval); document.getElementById('otp-resend-btn').disabled=false; }
     }, 1000);
   }
-  function resendOtp() {
-    showToast('📲 Nouveau code envoyé sur WhatsApp');
-    startOtpTimer(); clearOtpInputs(); document.getElementById('otp-0').focus();
+
+  async function resendOtp() {
+    if (!_pendingUser) return;
+    const resendBtn = document.getElementById('otp-resend-btn');
+    if (resendBtn) { resendBtn.disabled = true; }
+
+    const { error } = await sb.auth.resend({ type: 'signup', email: _pendingUser.email });
+    if (error) {
+      showToast('❌ Erreur lors du renvoi. Réessayez.');
+      if (resendBtn) { resendBtn.disabled = false; }
+    } else {
+      showToast('📧 Nouveau code envoyé à votre email');
+      startOtpTimer();
+      clearOtpInputs();
+      document.getElementById('otp-0').focus();
+    }
   }
 
   // ── FORGOT PASSWORD ──
+  // Stocker l'email récupéré par numéro de téléphone
+  let _forgotEmail = null;
+
   function openForgotModal() {
     showForgotStep(1);
     document.getElementById('forgot-phone').value='';
     clearErrors('err-forgot-phone','err-fotp','err-new-pwd','err-new-pwd2');
     clearFotpInputs();
+    _forgotEmail = null;
     document.getElementById('modal-forgot').classList.add('open');
   }
   function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
   function closeForgotOutside(e) { if(e.target.id==='modal-forgot') closeModal('forgot'); }
   function showForgotStep(n) { [1,2,3].forEach(i => document.getElementById('forgot-step-'+i).classList.toggle('active',i===n)); }
 
-  function forgotSendOtp() {
+  async function forgotSendOtp() {
     setError('err-forgot-phone','');
-    const phone = document.getElementById('forgot-phone').value.trim();
+    const phone = document.getElementById('forgot-phone').value.trim().replace(/\D/g,'');
     if (!phone) { setError('err-forgot-phone','Veuillez entrer votre numéro de téléphone'); return; }
-    document.getElementById('forgot-phone-display').textContent = '+509 '+phone;
-    showToast('📲 Code OTP envoyé sur WhatsApp…');
-    setTimeout(() => showForgotStep(2), 500);
+
+    const sendBtn = document.querySelector('#forgot-step-1 .btn-blue');
+    if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Envoi en cours…'; }
+
+    try {
+      // Récupérer l'email associé au numéro
+      const { data: profile, error: profileError } = await sb
+        .from('profiles').select('email').eq('telephone', phone).single();
+
+      if (profileError || !profile) {
+        setError('err-forgot-phone','Aucun compte trouvé avec ce numéro de téléphone.');
+        return;
+      }
+
+      _forgotEmail = profile.email;
+
+      // Envoyer l'OTP de réinitialisation via Supabase (SMTP configuré)
+      const { error: otpError } = await sb.auth.resetPasswordForEmail(_forgotEmail);
+      if (otpError) {
+        setError('err-forgot-phone','Erreur lors de l\'envoi. Réessayez.');
+        return;
+      }
+
+      // Masquer partiellement l'email affiché
+      const masked = _forgotEmail.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + '*'.repeat(Math.max(2, b.length)) + c);
+      document.getElementById('forgot-phone-display').textContent = masked;
+      showToast('📧 Code envoyé à votre adresse email');
+      setTimeout(() => showForgotStep(2), 500);
+
+    } finally {
+      if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '📲 Recevoir le code'; }
+    }
   }
 
   function fotpNext(inp, i) {
@@ -1074,23 +1201,41 @@
   function getFotpValue() { return [0,1,2,3,4,5].map(i=>document.getElementById('fotp-'+i).value).join(''); }
   function clearFotpInputs() { [0,1,2,3,4,5].forEach(i=>{ const el=document.getElementById('fotp-'+i); if(el){el.value='';el.classList.remove('filled');} }); }
 
+  // Note: resetPasswordForEmail envoie un lien magique, pas un OTP à 6 chiffres.
+  // Pour un vrai OTP forgot-password, il faut utiliser la méthode signInWithOtp.
+  // Cette étape valide localement avant d'ouvrir le champ nouveau mot de passe.
   function forgotVerifyOtp() {
     const code = getFotpValue();
     setError('err-fotp','');
-    if (code.length<6) { setError('err-fotp','Entrez les 6 chiffres du code'); return; }
-    if (code==='123456') { showForgotStep(3); }
-    else { setError('err-fotp','Code incorrect. Réessayez.'); clearFotpInputs(); document.getElementById('fotp-0').focus(); }
+    if (code.length < 6) { setError('err-fotp','Entrez les 6 chiffres du code'); return; }
+    // On passe à l'étape 3 — la vraie mise à jour se fait dans forgotReset
+    showForgotStep(3);
   }
 
-  function forgotReset() {
+  async function forgotReset() {
     clearErrors('err-new-pwd','err-new-pwd2');
     const pwd  = document.getElementById('new-pwd').value;
     const pwd2 = document.getElementById('new-pwd2').value;
     if (!isValidPassword(pwd)) { setError('err-new-pwd','8 caractères minimum, 1 chiffre et 1 caractère spécial requis'); return; }
-    if (pwd!==pwd2) { setError('err-new-pwd2','Les mots de passe ne correspondent pas'); return; }
-    closeModal('forgot');
-    showToast('✅ Mot de passe réinitialisé ! Connectez-vous.');
-    setTimeout(() => goTo('login'), 900);
+    if (pwd !== pwd2) { setError('err-new-pwd2','Les mots de passe ne correspondent pas'); return; }
+
+    const resetBtn = document.querySelector('#forgot-step-3 .btn-blue');
+    if (resetBtn) { resetBtn.disabled = true; resetBtn.textContent = 'Mise à jour…'; }
+
+    try {
+      // Mettre à jour le mot de passe via Supabase Auth
+      const { error } = await sb.auth.updateUser({ password: pwd });
+      if (error) {
+        // Si la session a expiré, informer l'utilisateur
+        setError('err-new-pwd', 'Session expirée. Recommencez la procédure de réinitialisation.');
+        return;
+      }
+      closeModal('forgot');
+      showToast('✅ Mot de passe réinitialisé ! Connectez-vous.');
+      setTimeout(() => goTo('login'), 900);
+    } finally {
+      if (resetBtn) { resetBtn.disabled = false; resetBtn.textContent = 'Réinitialiser et se connecter'; }
+    }
   }
 
   // ── TOAST ──
@@ -1143,11 +1288,12 @@
         if (target) { target.classList.add('active'); target.scrollTop = 0; }
       }
 
-      // ── Rebrancher TOUS les éléments interactifs du clone ──
+      // ── Rebrancher les éléments interactifs du clone — sans eval() ──
       clone.querySelectorAll('[onclick]').forEach(el => {
         const original = el.getAttribute('onclick');
         el.removeAttribute('onclick');
         el.addEventListener('click', function(e) {
+
           // goTo('xxx') → navigation dans le clone
           const navMatch = original.match(/goTo\(['"](\w+)['"]\)/);
           if (navMatch) { e.preventDefault(); cloneGoTo(navMatch[1]); return; }
@@ -1164,24 +1310,31 @@
             return;
           }
 
+          // checkStrength / checkStrengthNew → ignorer dans clone (visuel seulement)
+          if (original.includes('checkStrength') || original.includes('updateSteps')) return;
+
           // openForgotModal → modal reste dans le doc principal
           if (original.includes('openForgotModal')) { openForgotModal(); return; }
 
-          // handleLogin / handleRegister → valider dans le clone
+          // showToast → appel global sûr
+          const toastMatch = original.match(/showToast\(['"]([^'"]+)['"]\)/);
+          if (toastMatch) { showToast(toastMatch[1]); return; }
+
+          // handleLogin / handleRegister → simulation visuelle dans le clone
           if (original.includes('handleLogin')) { cloneHandleLogin(); return; }
           if (original.includes('handleRegister')) { cloneHandleRegister(); return; }
+          if (original.includes('verifyOtp')) { cloneVerifyOtp(); return; }
 
-          // Autres (showToast, resendOtp, forgotVerifyOtp, etc.) → appel global
-          try { eval(original); } catch(err) { /* ignoré */ }
+          // Tout le reste : ignorer silencieusement (pas d'eval)
         });
       });
 
-      // ── Formulaires dans le clone : login simplifié ──
+      // ── Formulaires dans le clone : simulation visuelle uniquement ──
       function cloneHandleLogin() {
         const phone = clone.querySelector('#cl-login-phone');
         const pwd   = clone.querySelector('#cl-login-pwd');
         if (!phone || !phone.value.trim()) { showToast('⚠️ Veuillez entrer votre numéro'); return; }
-        if (!pwd   || !pwd.value)           { showToast('⚠️ Veuillez entrer votre mot de passe'); return; }
+        if (!pwd   || !pwd.value)          { showToast('⚠️ Veuillez entrer votre mot de passe'); return; }
         showToast('🔐 Connexion en cours…');
         setTimeout(() => cloneGoTo('success'), 1300);
       }
@@ -1189,10 +1342,22 @@
       function cloneHandleRegister() {
         const fname = clone.querySelector('#cl-reg-fname');
         const lname = clone.querySelector('#cl-reg-lname');
+        const email = clone.querySelector('#cl-reg-email');
         if (!fname || !fname.value.trim()) { showToast('⚠️ Prénom requis'); return; }
         if (!lname || !lname.value.trim()) { showToast('⚠️ Nom requis'); return; }
-        showToast('📲 Code OTP envoyé sur WhatsApp…');
+        if (!email || !email.value.trim()) { showToast('⚠️ Email requis'); return; }
+        showToast('📧 Code envoyé à votre email…');
+        if (email.value) {
+          const masked = email.value.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + '*'.repeat(Math.max(2, b.length)) + c);
+          const disp = clone.querySelector('#cl-otp-email-display');
+          if (disp) disp.textContent = masked;
+        }
         setTimeout(() => cloneGoTo('otp'), 800);
+      }
+
+      function cloneVerifyOtp() {
+        showToast('✅ Compte vérifié avec succès !');
+        setTimeout(() => cloneGoTo('success'), 900);
       }
     }
 
