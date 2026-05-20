@@ -1057,17 +1057,28 @@
       });
 
       if (authError) {
-        let msg = 'Erreur lors de l\'inscription. Réessayez.';
-        try {
-          const parsed = typeof authError.message === 'string' ? JSON.parse(authError.message) : authError.message;
-          if (parsed?.msg) msg = parsed.msg;
-          else if (parsed?.message) msg = parsed.message;
-        } catch { msg = authError.message || msg; }
+        const raw = authError.message || '';
+        let msg = '';
 
-        if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('registered')) {
-          setError('err-email','Cette adresse email est déjà enregistrée.');
+        // Essayer de parser si c'est du JSON
+        try {
+          const parsed = JSON.parse(raw);
+          msg = parsed?.msg || parsed?.message || parsed?.error_description || raw;
+        } catch { msg = raw; }
+
+        msg = msg.toLowerCase();
+
+        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists') || msg.includes('taken')) {
+          setError('err-email', 'Cette adresse email est déjà enregistrée. Connectez-vous.');
+        } else if (msg.includes('invalid') && msg.includes('email')) {
+          setError('err-email', 'Adresse email invalide.');
+        } else if (msg.includes('password')) {
+          setError('err-pwd', 'Mot de passe refusé par le serveur. Essayez-en un autre.');
+        } else if (msg.includes('rate') || msg.includes('limit')) {
+          setError('err-email', 'Trop de tentatives. Attendez quelques minutes.');
         } else {
-          setError('err-email', msg);
+          // Afficher l'erreur brute pour debug
+          setError('err-email', '⚠️ ' + (authError.message || 'Erreur inconnue'));
         }
         return;
       }
